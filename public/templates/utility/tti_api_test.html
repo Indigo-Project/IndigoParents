@@ -1,0 +1,16 @@
+<h1>TTI API Test</h1>
+<form ng-show="!data.showRespondent" ng-submit="data.createRespondent()">
+  <input type="text" name="first_name" ng-model="data.respondentForm.first_name" placeholder="first name">
+  <input type="text" name="last_name" ng-model="data.respondentForm.last_name" placeholder="last name">
+  <select name="gender" ng-model="data.respondentForm.gender">
+    <option value="M">Male</option>
+    <option value="F">Female</option>
+  </select>
+  <input type="email" name="email" ng-model="data.respondentForm.email" placeholder="email">
+  <input type="text" name="company" ng-model="data.respondentForm.company" placeholder="company/organization">
+  <input type="text" name="position_job" ng-model="data.respondentForm.position_job" placeholder="occupation/role">
+  <button ng-show="!data.showRespondent" type="submit">Create Respondent</button>
+</form>
+<button ng-show="data.showRespondent" ng-click="data.viewRespondentAPIData">Go to API</button>
+<button ng-show="data.showRespondent" ng-click="data.createRespondent()">Reset Respondent</button>
+<h2 ng-show="data.showRespondent">{{data.newRespondent}}</h2>

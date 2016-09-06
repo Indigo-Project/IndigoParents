@@ -5,12 +5,12 @@ var TTI_API = require('../APIs/TTI_API');
 var router = express.Router();
 
 // GET local API
-router.get('/api', function(req, res, next) {
+router.get('/', function(req, res, next) {
   res.send("local api endpoint");
   mongo.mongoDBConnect(mongo.indigoTestURI);
 });
 
-router.get('/api/:link/passwords/unassigned', function(req, res, next) {
+router.get('/:link/passwords/unassigned', function(req, res, next) {
   // res.send("local api endpoint");
   mongo.mongoDBConnect(mongo.indigoTestURI)
   .then(function(data) {
@@ -31,7 +31,7 @@ router.get('/api/:link/passwords/unassigned', function(req, res, next) {
 });
 
 // POST to local API
-router.post('/api/createrespondent', function(req, res, next) {
+router.post('/createrespondent', function(req, res, next) {
 
   console.log("posted respondent data to local server /api: ", req.body);
   mongo.mongoDBConnect(mongo.indigoTestURI)
