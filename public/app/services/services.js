@@ -35,3 +35,5 @@ app.factory('TTI_API', ['$http', function($http) {
   }
   return service;
 }])
+
+app.factory('Mailgun')

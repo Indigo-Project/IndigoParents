@@ -1,20 +1,18 @@
+require('dotenv').config();
+
 var MongoClient = require('mongodb').MongoClient
 , assert = require('assert');
 
 var database = {
 
-  // Mongo Client NPM Module
-  // mongoClient: require('mongodb').MongoClient
-  // , assert = require('assert'),
-
   // Indigo Parents Connection URI
   indigoParentsURI: {
-    URI: 'mongodb://pauldziemianowicz:indigodb@ds019856.mlab.com:19856/indigoparents',
+    URI: process.env.MONGODB_PARENTS_URI,
     name: 'indigoparents'
   },
   // Indigo Test Connection URI
   indigoTestURI: {
-    URI: 'mongodb://pauldziemianowicz:indigodb@ds019946.mlab.com:19946/indigotest',
+    URI: process.env.MONGODB_TEST_URI,
     name: 'indigotest'
   },
 

@@ -1,3 +1,4 @@
+require('dotenv').config();
 var express = require('express');
 var path = require('path');
 var logger = require('morgan');
@@ -6,6 +7,7 @@ var bodyParser = require('body-parser');
 
 var admin = require('./routes/admin');
 var api = require('./routes/api');
+var mail = require('./routes/mail');
 
 var app = express();
 
@@ -23,6 +25,7 @@ app.use("/products", express.static(__dirname + "/public/index.html"));
 
 app.use('/admin', admin);
 app.use('/api', api);
+app.use('/mail', mail);
 
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
