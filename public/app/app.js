@@ -25,14 +25,14 @@ app.config(function($stateProvider, $urlRouterProvider, $locationProvider) {
       url: '/success',
       templateUrl: "templates/checkout_success.html"
     })
-    .state('adminPortal', {
-      url: '/admin',
-      templateUrl: "templates/admin_portal.html"
-    })
-    .state('TTITest', {
-      url: '/admin',
-      templateUrl: "templates/utility/tti_api_test.html"
-    })
+    // .state('adminPortal', {
+    //   url: '/admin',
+    //   templateUrl: "templates/admin_portal.html"
+    // })
+    // .state('TTITest', {
+    //   url: '/api',
+    //   templateUrl: "templates/utility/tti_api_test.html"
+    // })
 
     $locationProvider.html5Mode(true);
 })
