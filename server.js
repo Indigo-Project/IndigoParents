@@ -21,6 +21,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use("/products", express.static(__dirname + "/public/index.html"));
 app.use("/cart", express.static(__dirname + "/public/index.html"));
 app.use("/checkout", express.static(__dirname + "/public/index.html"));
+app.use("/success", express.static(__dirname + "/public/index.html"));
 
 app.use('/admin', admin);
 app.use('/api', api);

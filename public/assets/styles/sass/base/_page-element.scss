@@ -11,11 +11,14 @@ header.masthead {
   height: 10vh;
   background-color: white;
   margin: 0;
+  .masthead-start-filler {
+    width: 7.5vw;
+  }
   .masthead-logo {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 20vw;
+    width: 7.5vw;
   }
   .masthead-mid-filler {
     width: 55vw;
@@ -27,14 +30,24 @@ header.masthead {
     width: 20vw;
   }
   .masthead-end-filler {
-    width: 5vw;
+    width: 10vw;
   }
 }
 
-main.page-body {
+img.masthead-logo {
+  width: 100%;
+  height: auto;
+}
+
+main.page-body-wmast {
   width: 100vw;
   height: 90vh;
   background-color: #5658AD;
+}
+
+main.page-body-full {
+  width: 100vw;
+  height: 100vh;
 }
 
 div.footer {

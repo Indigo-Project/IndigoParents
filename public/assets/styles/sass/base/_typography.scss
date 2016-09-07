@@ -1,7 +1,17 @@
+// @font-face {
+//   font-family: 'brandon-grotesque'
+// }
+
 h1,h2,h3,h4,h5,h6 {
   margin: 0;
 }
 
-.masthead-nav h4 {
-  font-family: Brandon Grotesque;
+.masthead-nav {
+  h4 {
+  font-family: Optima;
+  color: #888888;
+  }
+  a {
+    text-decoration: none;
+  }
 }
