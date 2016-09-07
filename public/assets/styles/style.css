@@ -59,13 +59,19 @@ main.page-body-wmast {
   align-items: center;
   max-width: 100%;
   height: auto;
-  background-color: #4F4498;
   margin-top: 10vh; }
   main.page-body-wmast.landing-page {
-    height: 85vh; }
+    height: 85vh;
+    background-color: #4f4498; }
   main.page-body-wmast.products-page {
     background-color: rgba(79, 68, 152, 0.2); }
   main.page-body-wmast.shopping-cart {
+    height: 85vh;
+    background-color: #ffffff; }
+  main.page-body-wmast.checkout-page {
+    height: 85vh;
+    background-color: #ffffff; }
+  main.page-body-wmast.checkout-checkout-success {
     height: 85vh;
     background-color: #ffffff; }
 
@@ -76,6 +82,20 @@ main.page-body-full {
   max-width: 100%;
   height: 100vh;
   margin: 0; }
+
+img.landing-logo {
+  width: 40vw;
+  height: auto;
+  margin: 10vh; }
+
+button.landing-cta {
+  width: 25vw;
+  height: 6vh;
+  font-size: 18px;
+  border: none;
+  color: white;
+  background-color: #7BBF4A;
+  margin-right: 4vw; }
 
 div.footer {
   max-width: 100%;

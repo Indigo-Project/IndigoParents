@@ -56,15 +56,24 @@ main.page-body-wmast {
   align-items: center;
   max-width: 100%;
   height: auto;
-  background-color: #4F4498;
   margin-top: 10vh;
   &.landing-page {
     height: 85vh;
+    // background: url('file:///C:/Users/Paul/Galvanize/workspace/projects/IndigoParents/public/assets/img/Parent1.png');
+    background-color: rgba(79, 68, 152, 1);
   }
   &.products-page {
     background-color: rgba(#4f4498, 0.2);
   }
   &.shopping-cart {
+    height: 85vh;
+    background-color: #ffffff;
+  }
+  &.checkout-page {
+    height: 85vh;
+    background-color: #ffffff;
+  }
+  &.checkout-checkout-success {
     height: 85vh;
     background-color: #ffffff;
   }
@@ -79,6 +88,37 @@ main.page-body-full {
   margin: 0;
 }
 
+// LANDING PAGE
+// img.landing-background-img {
+//   position: absolute;
+//   z-index: 1000;
+//   width: 100vw;
+//   height: auto;
+//   opacity: 0.4;
+// }
+// img.landing-background {
+//   position: absolute;
+//   z-index: 1000;
+//   width: 100vw;
+//   height: auto;
+//   opacity: 0.4;
+// }
+
+img.landing-logo {
+  width: 40vw;
+  height: auto;
+  margin: 10vh;
+}
+
+button.landing-cta {
+  width: 25vw;
+  height: 6vh;
+  font-size: 18px;
+  border: none;
+  color: white;
+  background-color:#7BBF4A;
+  margin-right: 4vw;
+}
 // FOOTER
 div.footer {
   max-width: 100%;
