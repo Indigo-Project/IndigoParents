@@ -5,6 +5,7 @@ app.controller('Products_Controller', ['$scope', '$state', 'Moltin', function($s
   $scope.data.productsLoaded = false;
   $scope.data.orderQuantity = 1;
   $scope.data.getIndigoInventory = function() {
+    console.log('1 - load function ran');
     Moltin.getIndigoInventory()
     .then(function(data) {
       $scope.data.indigoInventory = data;

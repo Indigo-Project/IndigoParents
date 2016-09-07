@@ -1,5 +1,4 @@
 // TTI Service - connect to server-side TTI API
-
 app.factory('TTI_API', ['$http', function($http) {
   var service = {};
   service.createRespondent = function() {
@@ -65,11 +64,14 @@ app.factory('Mailgun', ['$http', '$location', '$timeout', function($http, $locat
 app.factory('Moltin', ['$http', function($http){
   var service = {};
   service.getIndigoInventory = function() {
+    console.log('2 - angular service ran');
     return new Promise(function(resolve, reject){
+      console.log('3 - inside of promise');
       $http({
         method: "GET",
         url: "/api/products/indigo-inventory"
       }).then(function(data) {
+        console.log('4 - get request made');
         if (data.data.product_id === "1334169416354496686") {
           resolve(data.data);
         } else {
