@@ -1,7 +1,7 @@
 app.directive('masthead', function() {
   return {
     restrict: 'E',
-    templateUrl: 'app/directives/partials/masthead.html'
+    templateUrl: 'app/directives/partials/masthead.html',
   }
 })
 
@@ -15,7 +15,8 @@ app.directive('landingPage', function() {
 app.directive('productsPage', function() {
   return {
     restrict: 'E',
-    templateUrl: 'app/directives/partials/products_page.html'
+    templateUrl: 'app/directives/partials/products_page.html',
+    controller: 'Products_Controller'
   }
 })
 

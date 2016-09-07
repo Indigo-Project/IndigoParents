@@ -1,4 +1,4 @@
-<header class="masthead">
+<header class="masthead" ng-controller="Cart_Controller">
   <div class="masthead-start-filler"></div>
   <div class="masthead-logo">
     <a ui-sref="landingPage"><h3><img class="masthead-logo" ng-src="../../../assets/img/IndigoParents.png" alt="Masthead-Logo"></h3></a>
@@ -7,8 +7,7 @@
   <div class="masthead-nav">
     <a target="_blank" href="http://www.indigoproject.org/parentnight"><h4>About</h4></a>
     <a ui-sref="productsPage"><h4>Products</h4></a>
-    <a ui-sref="shoppingCart"><h4>Cart</h4></a>
+    <a ui-sref="shoppingCart"><h4>Cart <span ng-class="{ glyphicon: data.mastheadLoaded, 'glyphicon-shopping-cart': data.mastheadLoaded, 'cart-green' : !view.cartEmpty }"></span></h4></a>
   </div>
   <div class="masthead-end-filler"></div>
-
 </header>

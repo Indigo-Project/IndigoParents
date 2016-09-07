@@ -2,14 +2,41 @@ var express = require('express');
 var request = require('request');
 var mongo = require('../database/mongo-db');
 var TTI_API = require('../APIs/TTI_API');
+var moltin = require('moltin')({
+  publicId: process.env.MOLTIN_CLIENT_ID,
+  secretKey: process.env.MOLTIN_SECRET
+});
 var router = express.Router();
 
 // GET local API
 router.get('/', function(req, res, next) {
   res.send("local api endpoint");
-  mongo.mongoDBConnect(mongo.indigoTestURI);
+  mongo.mongoDBConnect(mongo.indigoTestURI)
+  .then(function(data) {
+    db.close(data.db);
+  })
 });
 
+// GET moltin product by 'slug'
+router.get('/products/:slug', function(req, res, next) {
+  moltin.Authenticate(function() {
+    var product = moltin.Product.Find({slug: req.params.slug},
+    function(product) {
+      res.send({
+        product_title: product[0].title,
+        product_description: product[0].description,
+        product_price: product[0].price.value,
+        product_img: product[0].images[0].url.http,
+        product_id: product[0].id
+      })
+    },
+    function(error){
+      console.log(error);
+    });
+  });
+});
+
+// Retrieve one unassigned password
 router.get('/:link/passwords/unassigned', function(req, res, next) {
   // res.send("local api endpoint");
   mongo.mongoDBConnect(mongo.indigoTestURI)
@@ -30,7 +57,7 @@ router.get('/:link/passwords/unassigned', function(req, res, next) {
   })
 });
 
-// POST to local API
+// POST to local API with TTI_API
 router.post('/createrespondent', function(req, res, next) {
 
   console.log("posted respondent data to local server /api: ", req.body);

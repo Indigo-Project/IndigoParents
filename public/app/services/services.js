@@ -1,3 +1,5 @@
+// TTI Service - connect to server-side TTI API
+
 app.factory('TTI_API', ['$http', function($http) {
   var service = {};
   service.createRespondent = function() {
@@ -36,6 +38,7 @@ app.factory('TTI_API', ['$http', function($http) {
   return service;
 }])
 
+// Mailgun Service - connect to server-side Moltin API
 app.factory('Mailgun', ['$http', '$location', '$timeout', function($http, $location, $timeout) {
   var service = {};
   service.successfulPurchaseEmail = function() {
@@ -49,6 +52,28 @@ app.factory('Mailgun', ['$http', '$location', '$timeout', function($http, $locat
           resolve('/mail url accessed, email sent');
         } else {
           reject('email not sent');
+        }
+      }).catch(function(err) {
+        console.log(err);
+      })
+    })
+  }
+  return service;
+}])
+
+// Moltin Service - connect to server-side Moltin API
+app.factory('Moltin', ['$http', function($http){
+  var service = {};
+  service.getIndigoInventory = function() {
+    return new Promise(function(resolve, reject){
+      $http({
+        method: "GET",
+        url: "/api/products/indigo-inventory"
+      }).then(function(data) {
+        if (data.data.product_id === "1334169416354496686") {
+          resolve(data.data);
+        } else {
+          reject('product load unsuccessful')
         }
       }).catch(function(err) {
         console.log(err);

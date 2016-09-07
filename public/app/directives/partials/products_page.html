@@ -1,1 +1,41 @@
-<h1>PRODUCTS</h1>
+<main class="page-body-wmast products-page" ng-init="data.getIndigoInventory()">
+  <section class="all-products" ng-show="data.productsLoaded">
+    <div class="one-product" ng-repeat="product in data.products">
+      <div class="product-left">
+        <img class="product-img" ng-src="{{product.product_img}}" alt="product image">
+      </div>
+      <div class="product-right">
+        <div class="product-heading">
+          <h2>{{product.product_title}}</h2>
+          <h2 class="price">{{product.product_price}}</h2>
+        </div>
+        <div class="product-details">
+          <p class="product-description">{{product.product_description}}</p>
+        </div>
+        <div class="cart-cta">
+          <form ng-submit="" class="form-group">
+            <label for="quantity">Qty:</label>
+            <input type="number" name="quantity" class="form-control quantity" ng-model="data.orderQuantity">
+            <input type="submit" class="form-control add-to-cart" value="Add to Cart">
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section ng-show="data.productsLoaded" class="quotes">
+    <div class="quote">
+      <div class="image-cropper">
+        <img class="parent-img-1" ng-src="../assets/img/teacher.jpg" alt="parent">
+      </div>
+      <p>"The strongest life planning tool that I've ever experienced and the best $50 I have ever spent on my son."
+          - High School Parent</p>
+    </div>
+    <div class="quote">
+      <div class="image-cropper">
+        <img class="parent-img-2" ng-src="../assets/img/Parent 3.png" alt="parent">
+      </div>
+      <p>“Enlightening. Worth the time and money to help you understand yourself and your child. It immediately opened up some dialogues for my child and me.”
+          — High School Parent</p>
+    </div>
+  </section>
+</main>
