@@ -19,6 +19,7 @@ router.get('/', function(req, res, next) {
 
 // GET moltin product by 'slug'
 router.get('/products/:slug', function(req, res, next) {
+  console.log('4 - inside of server get request');
   moltin.Authenticate(function() {
     var product = moltin.Product.Find({slug: req.params.slug},
     function(product) {

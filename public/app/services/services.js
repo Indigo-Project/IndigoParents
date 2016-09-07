@@ -71,7 +71,7 @@ app.factory('Moltin', ['$http', function($http){
         method: "GET",
         url: "/api/products/indigo-inventory"
       }).then(function(data) {
-        console.log('4 - get request made');
+        console.log('5 - get request made');
         if (data.data.product_id === "1334169416354496686") {
           resolve(data.data);
         } else {
