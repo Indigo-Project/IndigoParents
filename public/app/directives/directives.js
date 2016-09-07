@@ -22,21 +22,24 @@ app.directive('productsPage', function() {
 app.directive('checkoutPage', function() {
   return {
     restrict: 'E',
-    templateUrl: 'app/directives/partials/checkout_page.html'
+    templateUrl: 'app/directives/partials/checkout_page.html',
+    controller: 'Checkout_Controller'
   }
 })
 
 app.directive('checkoutSuccess', function() {
   return {
     restrict: 'E',
-    templateUrl: 'app/directives/partials/checkout_success.html'
+    templateUrl: 'app/directives/partials/checkout_success.html',
+    controller: 'Checkout_Controller'
   }
 })
 
 app.directive('shoppingCart', function() {
   return {
     restrict: 'E',
-    templateUrl: 'app/directives/partials/shopping_cart.html'
+    templateUrl: 'app/directives/partials/shopping_cart.html',
+    controller: 'Checkout_Controller'
   }
 })
 

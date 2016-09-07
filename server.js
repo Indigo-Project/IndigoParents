@@ -20,8 +20,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // reroute url parameters of angular ui-router routes
 app.use("/products", express.static(__dirname + "/public/index.html"));
 app.use("/cart", express.static(__dirname + "/public/index.html"));
-app.use("/products", express.static(__dirname + "/public/index.html"));
-app.use("/products", express.static(__dirname + "/public/index.html"));
+app.use("/checkout", express.static(__dirname + "/public/index.html"));
 
 app.use('/admin', admin);
 app.use('/api', api);

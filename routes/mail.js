@@ -20,6 +20,7 @@ var mg = new Mailgun(process.env.MAILGUN_API_KEY);
 
 router.get('/', function(req, res, next) {
   mg.sendText('parents@indigoproject.org', 'pauldziemianowicz@gmail.com', 'Access Your Indigo Me Assessment', 'Here is the link and password', {'X-Campaign-Id': 'indigoParents'}, function(err) { err && console.log(err) });
+  console.log('email sent');
   res.send('email sent ' + process.env.MAILGUN_API_KEY);
 })
 

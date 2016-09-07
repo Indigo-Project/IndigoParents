@@ -36,4 +36,24 @@ app.factory('TTI_API', ['$http', function($http) {
   return service;
 }])
 
-app.factory('Mailgun')
+app.factory('Mailgun', ['$http', '$location', '$timeout', function($http, $location, $timeout) {
+  var service = {};
+  service.successfulPurchaseEmail = function() {
+    return new Promise(function(resolve, reject) {
+        $http({
+          method: "GET",
+          url: "/mail"
+        }).then(function(data) {
+        console.log(data.status === 200);
+        if(data.status === 200) {
+          resolve('/mail url accessed, email sent');
+        } else {
+          reject('email not sent');
+        }
+      }).catch(function(err) {
+        console.log(err);
+      })
+    })
+  }
+  return service;
+}])

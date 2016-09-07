@@ -65,7 +65,6 @@ var database = {
 
     // Access the respondentPasswords collection
     var collection = db.collection('respondentPasswords');
-
   },
 
   getUnassignedPasswordsByLink: function(db, link) {
@@ -73,9 +72,7 @@ var database = {
     // Access the respondentPasswords collection
     var cursor = db.collection('respondentPasswords').find();
     return cursor.toArray();
-
   }
-
 }
 
 module.exports = database;
