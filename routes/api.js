@@ -28,7 +28,7 @@ router.get('/products/:slug', function(req, res, next) {
   moltin.Authenticate(function() {
     var product = moltin.Product.Find({slug: req.params.slug},
     function(product) {
-      console.log(product);
+      // console.log(product);
       res.send({
         product_title: product[0].title,
         product_description: product[0].description,

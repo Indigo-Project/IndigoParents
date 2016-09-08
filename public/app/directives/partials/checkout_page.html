@@ -1,2 +1,37 @@
-<h1>CHECKOUT</h1>
-<a ng-click="data.purchaseSubmission()">Submit Purchase</a>
+<main class="page-body-full checkout-page">
+  <h1>Finalize and Submit Purchase</h1>
+  <h4 class="checkout-context">Once your purchase is successfully submitted, you will receive access to your Indigo Inventory via the provided email</h4>
+  <section class="checkout">
+    <form class="control-group checkout-form" name="submitCheckout" ng-submit="">
+      <div class="checkout-left">
+        <div class="checkout-user">
+          <h4 class="checkout-subtitle">Personal Information</h4>
+          <div class="checkout-top-row">
+            <input class="form-control first-name" type="text" placeholder="first name" required>
+            <input class="form-control last-name" type="text" placeholder="last name" required>
+          </div>
+          <input class="form-control email" type="email" placeholder="email" required>
+        </div>
+        <div class="checkout-payment">
+          <h4 class="checkout-subtitle">Payment Method</h4>
+          <input class="form-control card-name" type="text" placeholder="full name as appears on card" required>
+          <input class="form-control card-number" type="number" placeholder="credit/debit card number" required>
+          <div class="checkout-bottom-row">
+            <input class="form-control exp-date" type="text" placeholder="mm/yy" required>
+            <input class="form-control sec-number" type="number" placeholder="CVC/CVV" required>
+          </div>
+        </div>
+      </div>
+      <div class="checkout-right">
+        <div class="order-summary">
+          <h3 class="checkout-subtitle">Order Summary</h3>
+          <h4>Items</h4>
+          <p>{{data.cart.title}} x {{data.cart.quantity}}</p>
+          <h4>Subtotal</h4>
+          <p>{{data.cart.price * data.cart.quantity | currency}}</p>
+        </div>
+        <input class="form-control submit-purchase" type="submit" value="Submit Purchase" required>
+      </div>
+    </form>
+  </section>
+</main>

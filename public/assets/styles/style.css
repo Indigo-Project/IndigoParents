@@ -71,14 +71,13 @@ main.page-body-wmast {
   main.page-body-wmast.checkout-page {
     height: 85vh;
     background-color: #ffffff; }
-  main.page-body-wmast.checkout-checkout-success {
+  main.page-body-wmast.checkout-success {
     height: 85vh;
     background-color: #ffffff; }
 
 main.page-body-full {
   display: flex;
   flex-direction: column;
-  align-items: center;
   max-width: 100%;
   height: 100vh;
   margin: 0; }
@@ -102,6 +101,17 @@ div.footer {
   height: 5vh;
   background-color: #1F1F1F;
   margin: 0; }
+
+section.loading-filler {
+  max-width: 100%;
+  height: 100vh;
+  background-color: white; }
+
+img.filler-logo {
+  width: 40%;
+  height: auto;
+  margin: 10vh 0 0 30vw;
+  opacity: 0.3; }
 
 section.all-products {
   display: flex;
@@ -175,5 +185,155 @@ div.quote {
       height: 5vw; }
   div.quote p {
     width: 55vw; }
+
+h2.page-title {
+  margin: 8vh 51vw 0 0; }
+
+section.all-items {
+  display: flex;
+  flex-direction: column;
+  width: 65vw;
+  margin-top: 4vh; }
+
+div.cart-headers {
+  display: flex;
+  justify-content: space-between;
+  padding: 0; }
+  div.cart-headers p {
+    font-weight: bold; }
+
+#cart-quantity-header {
+  margin-left: 15vw; }
+
+#cart-price-header {
+  margin-right: 10vw; }
+
+div.one-item {
+  display: flex;
+  padding: 3vh 0 3vh 0;
+  margin: 1vh 0 3vh 0;
+  border-top: 1px solid #888888;
+  border-bottom: 1px solid #888888; }
+  div.one-item div.item-left {
+    display: flex;
+    width: 33vw; }
+    div.one-item div.item-left img.item-img {
+      width: 8vw;
+      height: 20vh;
+      border: 0.5px solid #888888; }
+    div.one-item div.item-left h3.item-title {
+      font-weight: 200;
+      margin: 7vh 0 0 3vw; }
+  div.one-item div.item-right {
+    display: flex;
+    width: 32vw; }
+    div.one-item div.item-right form {
+      display: flex;
+      width: 18vw;
+      margin-top: 6.5vh; }
+      div.one-item div.item-right form input.update-quantity {
+        width: 60px;
+        margin-right: 20px; }
+      div.one-item div.item-right form input.update-cart {
+        width: 100px;
+        color: white;
+        background-color: #4f4498; }
+    div.one-item div.item-right h4 {
+      font-weight: 200;
+      margin: 7.5vh 0 0 1.75vw; }
+
+div.cart-totals {
+  display: flex;
+  width: 20vw;
+  border-bottom: 1px solid #888888;
+  padding-bottom: 2.5vh;
+  margin: 0 0 3vh 45vw; }
+  div.cart-totals h4 {
+    font-weight: 200; }
+    div.cart-totals h4.cart-subtotal-title {
+      margin-left: 7vw; }
+    div.cart-totals h4.cart-subtotal-price {
+      margin-left: 3vw; }
+
+div.cart-ctas {
+  display: flex;
+  justify-content: space-between; }
+
+button.empty-cart-cta {
+  width: 120px;
+  border: none;
+  color: white;
+  background-color: #d948b0; }
+
+button.checkout-cta {
+  width: 150px;
+  font-size: 16px;
+  border: none;
+  background-color: #7BBF4A; }
+  button.checkout-cta a {
+    color: #ffffff; }
+
+button.cart-empty-cta {
+  width: 25vw;
+  height: 6vh;
+  font-size: 18px;
+  border: none;
+  color: white;
+  background-color: #7BBF4A;
+  margin-top: 5vh; }
+
+main.checkout-page {
+  padding: 100px; }
+  main.checkout-page h1 {
+    margin-bottom: 10px; }
+  main.checkout-page h4.checkout-context {
+    font-weight: 200; }
+
+.checkout-subtitle {
+  font-weight: 200;
+  margin-bottom: 10px; }
+
+section.checkout {
+  width: 45vw;
+  height: 50vh;
+  margin-top: 40px; }
+
+form.checkout-form {
+  display: flex;
+  justify-content: space-between; }
+
+div.checkout-user {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px; }
+  div.checkout-user .checkout-top-row {
+    display: flex; }
+  div.checkout-user input {
+    margin-bottom: 10px; }
+    div.checkout-user input.first-name {
+      width: 140px;
+      margin-right: 15px; }
+
+div.checkout-payment {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px; }
+  div.checkout-payment .checkout-bottom-row {
+    display: flex; }
+  div.checkout-payment input {
+    margin-bottom: 10px; }
+    div.checkout-payment input.exp-date {
+      width: 100px; }
+    div.checkout-payment input.sec-number {
+      width: 100px;
+      margin-left: 15px; }
+
+div.order-summary h4 {
+  margin-bottom: 3px; }
+
+input.submit-purchase {
+  color: white;
+  background-color: #7BBF4A;
+  margin-top: 20px; }
 
 /*# sourceMappingURL=style.css.map */

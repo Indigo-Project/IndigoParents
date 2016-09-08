@@ -1,4 +1,7 @@
 <main class="page-body-wmast products-page" ng-init="data.getIndigoInventory()">
+  <section class="loading-filler" ng-show="!data.productsLoaded">
+    <img class="filler-logo" ng-src="../../../assets/img/IndigoParents.png" alt="">
+  </section>
   <section class="all-products" ng-show="data.productsLoaded">
     <div class="one-product" ng-repeat="product in data.products">
       <div class="product-left">
