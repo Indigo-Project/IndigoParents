@@ -1,11 +1,11 @@
-app.controller('Products_Controller', ['$scope', '$state', 'Moltin', function($scope, $state, Moltin){
+app.controller('Products_Controller', ['$scope', '$state', 'Moltin_API', function($scope, $state, Moltin_API){
   $scope.view = {};
   $scope.data = {};
   $scope.data.products = [];
   $scope.data.productsLoaded = false;
   $scope.data.orderQuantity = 1;
   $scope.data.getIndigoInventory = function() {
-    Moltin.getIndigoInventory()
+    Moltin_API.getIndigoInventory()
     .then(function(data) {
       $scope.data.indigoInventory = data;
       $scope.data.products.push(data);

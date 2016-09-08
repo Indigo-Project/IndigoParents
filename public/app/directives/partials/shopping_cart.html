@@ -1,4 +1,21 @@
 <main class="page-body-wmast shopping-cart">
-  <h1>CART</h1>
-  <a ui-sref="checkoutMain">Checkout</a>
+  <section ng-show="data.cart[0].length !== 0">
+    <h2>Shopping Cart</h2>
+    <div ng-repeat="product in data.cart">
+      <!-- <p>{{product['826f6d0ae11323676ad968c82c15fa5b']}}</p> -->
+      <p>{{product['826f6d0ae11323676ad968c82c15fa5b'].title}}</p>
+      <p>{{product['826f6d0ae11323676ad968c82c15fa5b'].price | currency}}</p>
+      <p>{{product['826f6d0ae11323676ad968c82c15fa5b'].images[0].url.https}}</p>
+      <form name="updateCart" ng-submit="data.updateCart()">
+        <label for="quantity">Qty:</label>
+        <input type="number" name="quantity" class="form-control update-quantity" ng-model="form.updateQuantity" ng-init="form.updateQuantity = product['826f6d0ae11323676ad968c82c15fa5b'].quantity" required>
+        <input type="submit" class="form-control update-cart" value="Update Cart">
+      </form>
+      <button class="form-control" ng-click="data.emptyCart()">Empty Cart</button>
+    </div>
+    <button class="form-control"><a ui-sref="checkoutMain">Checkout</a></button>
+  </section>
+  <section ng-show="data.cart[0].length === 0">
+    <h2>Cart Empty</h2>
+  </section>
 </main>

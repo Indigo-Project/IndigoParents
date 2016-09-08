@@ -61,7 +61,7 @@ app.factory('Mailgun', ['$http', '$location', '$timeout', function($http, $locat
 }])
 
 // Moltin Service - connect to server-side Moltin API
-app.factory('Moltin', ['$http', function($http){
+app.factory('Moltin_API', ['$http', function($http){
   var service = {};
   service.getIndigoInventory = function() {
     return new Promise(function(resolve, reject){
@@ -73,6 +73,22 @@ app.factory('Moltin', ['$http', function($http){
           resolve(data.data);
         } else {
           reject('product load unsuccessful')
+        }
+      }).catch(function(err) {
+        console.log(err);
+      })
+    })
+  }
+  service.getENV = function() {
+    return new Promise(function(resolve, reject) {
+      $http({
+        method: "GET",
+        url: "/api/env"
+      }).then(function(data) {
+        if (data) {
+          resolve(data)
+        } else {
+          reject('no data');
         }
       }).catch(function(err) {
         console.log(err);

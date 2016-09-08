@@ -17,11 +17,18 @@ router.get('/', function(req, res, next) {
   })
 });
 
+// GET ENV Variables
+router.get('/env', function(req, res, next){
+  var env = process.env;
+  res.send(env);
+})
+
 // GET moltin product by 'slug'
 router.get('/products/:slug', function(req, res, next) {
   moltin.Authenticate(function() {
     var product = moltin.Product.Find({slug: req.params.slug},
     function(product) {
+      console.log(product);
       res.send({
         product_title: product[0].title,
         product_description: product[0].description,
@@ -39,7 +46,6 @@ router.get('/products/:slug', function(req, res, next) {
 
 // Retrieve one unassigned password
 router.get('/:link/passwords/unassigned', function(req, res, next) {
-  // res.send("local api endpoint");
   mongo.mongoDBConnect(mongo.indigoTestURI)
   .then(function(data) {
     mongo.getUnassignedPasswordsByLink(data.db, req.params.link)

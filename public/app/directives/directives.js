@@ -40,7 +40,7 @@ app.directive('shoppingCart', function() {
   return {
     restrict: 'E',
     templateUrl: 'app/directives/partials/shopping_cart.html',
-    controller: 'Checkout_Controller'
+    controller: 'Cart_Controller'
   }
 })
 
