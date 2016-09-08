@@ -4,8 +4,8 @@ app.controller('Cart_Controller', ['$scope', '$state', 'Moltin_API', function($s
   $scope.data = {};
   $scope.data.mastheadLoaded = true;
   $scope.data.cart = JSON.parse(localStorage.getItem('moltin_cart')) || [];
-  // $scope.data.totalCartQty = $scope.data.cart[0]['826f6d0ae11323676ad968c82c15fa5b'].quantity || 0;
-  $scope.view.cartEmpty = $scope.data.totalCartQty <= 0 || true;
+  $scope.data.totalCartQty = $scope.data.cart.length || 0;
+  $scope.view.cartEmpty = $scope.data.totalCartQty <= 0;
   $scope.data.cartLoaded = false;
   // console.log("ls moltin_cart: ", $scope.data.cart);
   // console.log($scope.data.cart[0]['826f6d0ae11323676ad968c82c15fa5b'].quantity <= 0);
@@ -19,7 +19,7 @@ app.controller('Cart_Controller', ['$scope', '$state', 'Moltin_API', function($s
   //     })
   // }
   $scope.data.updateCartStatus = function() {
-    console.log($scope.data.totalCartQty);
+    console.log($scope.data.cart[0]);
     if ($scope.data.totalCartQty > 0) {
       $scope.view.cartEmpty = false;
     } else {
@@ -31,6 +31,7 @@ app.controller('Cart_Controller', ['$scope', '$state', 'Moltin_API', function($s
 
   $scope.data.calcTotalCartQty = function() {
     $scope.data.totalCartQty = $scope.data.cart[0]['826f6d0ae11323676ad968c82c15fa5b'].quantity;
+    $scope.data.updateCartStatus();
   }
 
   $scope.data.addToCart = function(productSlug) {
@@ -49,7 +50,6 @@ app.controller('Cart_Controller', ['$scope', '$state', 'Moltin_API', function($s
           $scope.data.cart = JSON.parse(localStorage.getItem('moltin_cart'));
           $state.transitionTo('shoppingCart');
           $scope.data.calcTotalCartQty();
-          $scope.data.updateCartStatus();
         }).catch(function(error) {
           console.log(error);
         })
