@@ -90,14 +90,15 @@ main.page-body-full {
 
 // LANDING PAGE
 // img.landing-background-img {
-//   position: absolute;
-//   z-index: 1000;
+//   position: relative;
+//   z-index: 999;
 //   width: 100vw;
 //   height: auto;
 //   opacity: 0.4;
 // }
+//
 // img.landing-background {
-//   position: absolute;
+//   position: relative;
 //   z-index: 1000;
 //   width: 100vw;
 //   height: auto;

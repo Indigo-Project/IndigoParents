@@ -19,7 +19,6 @@ router.get('/', function(req, res, next) {
 
 // GET moltin product by 'slug'
 router.get('/products/:slug', function(req, res, next) {
-  console.log('4 - inside of server get request');
   moltin.Authenticate(function() {
     var product = moltin.Product.Find({slug: req.params.slug},
     function(product) {
@@ -27,8 +26,9 @@ router.get('/products/:slug', function(req, res, next) {
         product_title: product[0].title,
         product_description: product[0].description,
         product_price: product[0].price.value,
-        product_img: product[0].images[0].url.http,
-        product_id: product[0].id
+        product_img: product[0].images[0].url.https,
+        product_id: product[0].id,
+        product_slug: product[0].slug
       })
     },
     function(error){
