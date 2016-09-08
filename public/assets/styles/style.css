@@ -263,7 +263,7 @@ button.empty-cart-cta {
   width: 120px;
   border: none;
   color: white;
-  background-color: #d948b0; }
+  background-color: #d94848; }
 
 button.checkout-cta {
   width: 150px;
@@ -335,5 +335,17 @@ input.submit-purchase {
   color: white;
   background-color: #7BBF4A;
   margin-top: 20px; }
+
+main.checkout-success {
+  padding: 100px; }
+  main.checkout-success h1 {
+    margin-bottom: 20px; }
+  main.checkout-success h3 {
+    font-weight: 200; }
+  main.checkout-success button.return-home {
+    width: 200px;
+    color: white;
+    background-color: #4f4498;
+    margin-top: 30px; }
 
 /*# sourceMappingURL=style.css.map */

@@ -67,12 +67,27 @@ var database = {
     var collection = db.collection('respondentPasswords');
   },
 
-  getUnassignedPasswordsByLink: function(db, link) {
+  getAllPasswordsByLink: function(db, link) {
 
     // Access the respondentPasswords collection
     var cursor = db.collection('respondentPasswords').find();
     return cursor.toArray();
+  },
+
+  assignPassword: function(db, link, pw) {
+
+    return new Promise(function(resolve, reject) {
+      var collection = db.collection('respondentPasswords');
+      collection.updateOne({password: pw}, {$set: {assigned: true}}, function(err, result) {
+        assert.equal(null, err);
+        assert.equal(1, result.matchedCount);
+        assert.equal(1, result.modifiedCount);
+        resolve({result: result, password: pw});
+      })
+    })
   }
+
+
 }
 
 module.exports = database;

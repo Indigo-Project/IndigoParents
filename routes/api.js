@@ -44,23 +44,31 @@ router.get('/products/:slug', function(req, res, next) {
   });
 });
 
-// Retrieve one unassigned password
-router.get('/:link/passwords/unassigned', function(req, res, next) {
+// Retrieve fresh unassigned password by link, assign to user, and mark as assigned
+router.get('/:link/passwords/assign-new', function(req, res, next) {
   mongo.mongoDBConnect(mongo.indigoTestURI)
   .then(function(data) {
-    mongo.getUnassignedPasswordsByLink(data.db, req.params.link)
-    .then(function(data) {
+    mongo.getAllPasswordsByLink(data.db, req.params.link)
+    .then(function(respondentPasswords) {
+      console.log('resondentPasswords', respondentPasswords);
       var unassignedPasswords = [];
-      for (var i = 0; i < data.length; i++) {
-        if (data[i].assigned === "false") {
-          unassignedPasswords.push(data[i])
+      var passwordToAssign = "";
+      for (var i = 0; i < respondentPasswords.length; i++) {
+        if (respondentPasswords[i].assigned === false) {
+          console.log('false');
+          unassignedPasswords.push(respondentPasswords[i]);
         }
       }
-      res.send(unassignedPasswords[0].password);
+      passwordToAssign = unassignedPasswords[0].password;
+      console.log(passwordToAssign);
+      mongo.assignPassword(data.db, req.params.link, passwordToAssign)
+      .then(function(result){
+        mongo.mongoDBDisconnect(data.db);
+        res.send(result);
+      })
     }).catch(function(err){
       console.log(err);
     })
-    mongo.mongoDBDisconnect(data.db);
   })
 });
 

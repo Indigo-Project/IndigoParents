@@ -18,10 +18,12 @@ var mg = new Mailgun(process.env.MAILGUN_API_KEY);
 // options - Optional parameters. See Mailgun's API docs for details on these. At the time of writing, the only supported value is headers, which should be a hash of additional MIME headers you want to send.
 // callback - Callback to be fired when the email is done being sent. This should take a single parameter, err, that will be set to the status code of the API HTTP response code if the email failed to send; on success, err will be undefined.
 
-router.get('/', function(req, res, next) {
-  mg.sendText('parents@indigoproject.org', 'pauldziemianowicz@gmail.com', 'Access Your Indigo Me Assessment', 'Here is the link and password', {'X-Campaign-Id': 'indigoParents'}, function(err) { err && console.log(err) });
-  console.log('email sent');
-  res.send('email sent ' + process.env.MAILGUN_API_KEY);
+router.post('/', function(req, res, next) {
+  console.log('post arrived at /mail');
+  console.log('formData: ', req.body[0]);
+  console.log('password: ', req.body[1]);
+  mg.sendText('IndigoParents@indigoproject.org', req.body[0].email, req.body[0].firstName + ', Access Your Indigo Me Assessment', 'Here is the link: https://www.ttisurvey.com/308149BWF, and password: ' + req.body[1] + ' . Click on the link and enter your password to begin the Indigo Assessment.', {'X-Campaign-Id': 'indigoParents'}, function(err) { err && console.log(err) });
+  res.send();
 })
 
 module.exports = router;

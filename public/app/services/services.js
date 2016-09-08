@@ -40,23 +40,32 @@ app.factory('TTI_API', ['$http', function($http) {
 // Mailgun Service - connect to server-side Moltin API
 app.factory('Mailgun', ['$http', '$location', '$timeout', function($http, $location, $timeout) {
   var service = {};
-  service.successfulPurchaseEmail = function() {
+  service.successfulPurchaseEmail = function(formData) {
     return new Promise(function(resolve, reject) {
+      $http({
+        method: "GET",
+        url: "/api/308149BWF/passwords/assign-new"
+      }).then(function(data) {
+        console.log('mailgun service GET 1', data);
         $http({
-          method: "GET",
-          url: "/mail"
-        }).then(function(data) {
-        console.log(data.status === 200);
-        if(data.status === 200) {
-          resolve('/mail url accessed, email sent');
+          method: "POST",
+          url: "/mail",
+          data: [formData, data.data.password] 
+        }).then(function(maildata) {
+        console.log(maildata.status === 200);
+        if(maildata.status === 200) {
+          resolve('posted to /mail url, email sent');
         } else {
           reject('email not sent');
         }
       }).catch(function(err) {
         console.log(err);
       })
+    }).catch(function(err) {
+      console.log(err);
     })
-  }
+  })
+}
   return service;
 }])
 
