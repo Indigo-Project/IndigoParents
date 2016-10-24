@@ -65,11 +65,15 @@ router.get('/:link/passwords/assign-new', function(req, res, next) {
       .then(function(result){
         mongo.mongoDBDisconnect(data.db);
         res.send(result);
+      }).catch(function(err){
+        console.log(err);
       })
     }).catch(function(err){
       console.log(err);
     })
-  })
+  }).catch(function(err){
+    console.log(err);
+  });
 });
 
 // POST to local API with TTI_API

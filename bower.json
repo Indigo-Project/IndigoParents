@@ -1,0 +1,21 @@
+{
+  "name": "Indigo-Parents",
+  "description": "",
+  "main": "",
+  "license": "MIT",
+  "homepage": "https://github.com/pauldziemianowicz/IndigoParents",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "public/library",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "^1.5.8",
+    "bootstrap": "^3.3.7",
+    "angular-ui-router": "ui-router#^0.3.1",
+    "moltin": "^1.0.0"
+  }
+}
