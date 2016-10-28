@@ -8,7 +8,7 @@
   },
   "scripts": {
     "start": "node ./bin/www",
-    "postinstall": "bower cache clean && ./node_modules/bower/bin/bower install"
+    "postinstall": "bash ./post_install.sh"
   },
   "dependencies": {
     "bcrypt": "^0.8.7",
