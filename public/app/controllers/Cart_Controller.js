@@ -2,26 +2,33 @@ app.controller('Cart_Controller', ['$scope', '$state', 'localStorageService', 'M
 
   $scope.view = {};
   $scope.data = {};
+
   $scope.data.mastheadLoaded = true;
-  $scope.data.cart = localStorageService.get('cart') || [];
-  if ($scope.data.cart['0']['826f6d0ae11323676ad968c82c15fa5b']) {
-    $scope.data.totalCartQty = $scope.data.cart['0']['826f6d0ae11323676ad968c82c15fa5b'].quantity
+
+  // set cartKey variable to key of cart object
+  var cartKey = Object.keys(localStorageService.get('cart')['0'])[0] || null;
+
+  // if no cartKey, $scope.data.cart = null, otherwise = localStorage Cart Object
+  if(cartKey === null) {
+    $scope.data.cart = [];
+    var iiCartItem = null;
+  } else {
+    $scope.data.cart = localStorageService.get('cart');
+    var iiCartItem = $scope.data.cart['0'][cartKey];
+  }
+
+  // if iiCartItem totalCartQty = quantity of cart Item, otherwise = 0;
+  if (iiCartItem) {
+    $scope.data.totalCartQty = iiCartItem.quantity
   } else {
     $scope.data.totalCartQty = 0;
   }
-  $scope.view.cartEmpty = $scope.data.totalCartQty <= 0;
-  $scope.data.cartLoaded = false;
-  // console.log("ls cart: ", $scope.data.cart);
-  // console.log($scope.data.cart[0]['826f6d0ae11323676ad968c82c15fa5b'].quantity <= 0);
-  // console.log("ls cart: ", $scope.data.cart[0]['826f6d0ae11323676ad968c82c15fa5b'].quantity);
 
-  // $scope.data.cart = JSON.parse(localStorageService.get('indigoParentsCart')) || [];
-  // $scope.data.displayCart = function() {
-  //   Moltin_API.getIndigoInventory()
-  //     .then(function(data){
-  //       console.log(data.product_id);
-  //     })
-  // }
+  $scope.view.cartEmpty = $scope.data.totalCartQty <= 0;
+
+  $scope.data.cartLoaded = false;
+
+  // update view.cartEmpty based on totalCart Qty
   $scope.data.updateCartStatus = function() {
     if ($scope.data.totalCartQty > 0) {
       $scope.view.cartEmpty = false;
@@ -29,13 +36,21 @@ app.controller('Cart_Controller', ['$scope', '$state', 'localStorageService', 'M
       $scope.view.cartEmpty = true;
     }
   }
+
+  // run updateCartStatus on controller instantiation
   $scope.data.updateCartStatus();
 
+  // calculate total cart quantity
   $scope.data.calcTotalCartQty = function() {
-    $scope.data.totalCartQty = $scope.data.cart[0]['826f6d0ae11323676ad968c82c15fa5b'].quantity;
+    if (cartKey === null) {
+      $scope.data.totalCartQty = 0;
+    } else {
+      $scope.data.totalCartQty = $scope.data.cart['0'][cartKey].quantity || 0
+    }
     $scope.data.updateCartStatus();
   }
 
+  // run when user clicks 'add to cart' from products page
   $scope.data.addToCart = function(productSlug) {
 
     Moltin_API.getENV()
@@ -49,26 +64,33 @@ app.controller('Cart_Controller', ['$scope', '$state', 'localStorageService', 'M
           var cartContents = [];
           cartContents.push(cart.contents);
           localStorageService.set("cart", cartContents);
-          $scope.data.cart = localStorageService.get('cart');
+          if(cartKey === null) {
+            $scope.data.cart = [];
+            var iiCartItem = null;
+          } else {
+            $scope.data.cart = localStorageService.get('cart');
+            var iiCartItem = $scope.data.cart['0'][cartKey];
+          }
           $scope.data.calcTotalCartQty();
           $scope.$apply();
           $state.transitionTo('shoppingCart');
         }).catch(function(error) {
           console.log(error);
         })
-      });
+      })
     }).catch(function(error) {
       console.log(error);
     })
   }
 
+  // run when user clicks 'empty cart' in cart
   $scope.data.emptyCart = function() {
     Moltin_API.getENV()
     .then(function(env) {
       var moltin = new Moltin({publicId: env.data.MOLTIN_CLIENT_ID});
       moltin.Authenticate(function() {
         // var cartID =
-        moltin.Cart.Remove('826f6d0ae11323676ad968c82c15fa5b', function() {
+        moltin.Cart.Remove(cartKey, function() {
           var cart = moltin.Cart.Contents();
           var cartContents = [];
           cartContents.push(cart.contents);
@@ -88,16 +110,16 @@ app.controller('Cart_Controller', ['$scope', '$state', 'localStorageService', 'M
     })
   }
 
+  //
   $scope.data.updateCartQuantity = function(quantity) {
     console.log(quantity);
     Moltin_API.getENV()
     .then(function(env) {
       var moltin = new Moltin({publicId: env.data.MOLTIN_CLIENT_ID});
       moltin.Authenticate(function() {
-        moltin.Cart.Update('826f6d0ae11323676ad968c82c15fa5b', {
+        moltin.Cart.Update(cartKey, {
           quantity: quantity
         }, function(item) {
-          console.log(item);
           var cart = moltin.Cart.Contents();
           var cartContents = [];
           cartContents.push(cart.contents);
