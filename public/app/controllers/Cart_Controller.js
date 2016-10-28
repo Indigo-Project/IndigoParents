@@ -53,7 +53,7 @@ app.controller('Cart_Controller', ['$scope', '$state', 'localStorageService', 'M
     if (cartKey === null) {
       $scope.data.totalCartQty = 0;
     } else {
-      $scope.data.totalCartQty = $scope.data.cart['0'][cartKey].quantity || 0
+      $scope.data.totalCartQty = $scope.data.cart['0'][cartKey].quantity || 0;
     }
     $scope.data.updateCartStatus();
   }
