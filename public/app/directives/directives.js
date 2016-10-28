@@ -51,9 +51,42 @@ app.directive('footer', function() {
   }
 })
 
+app.directive('adminLogin', function() {
+  return {
+    restrict: 'E',
+    templateUrl: 'app/directives/partials/admin_login.html',
+    controller: "Admin_Controller"
+  }
+})
+
 app.directive('adminPortal', function() {
   return {
     restrict: 'E',
-    templateUrl: 'app/directives/partials/admin_portal.html'
+    templateUrl: 'app/directives/partials/admin_portal.html',
+    controller: "Admin_Controller"
+  }
+})
+
+app.directive('addPasswords', function() {
+  return {
+    restrict: 'E',
+    templateUrl: 'app/directives/partials/add_passwords.html',
+    controller: "Admin_Controller"
+  }
+})
+
+app.directive('generateLink', function() {
+  return {
+    restrict: 'E',
+    templateUrl: 'app/directives/partials/generate_link.html',
+    controller: "Admin_Controller"
+  }
+})
+
+app.directive('schoolSiteRedirect', function() {
+  return {
+    restrict: 'E',
+    templateUrl: 'app/directives/partials/school_site_redirect.html',
+    controller: "Base_Controller"
   }
 })

@@ -1,6 +1,6 @@
 <main class="page-body-wmast shopping-cart">
-  <h2 class="page-title" ng-show="data.cart[0].length !== 0">Shopping Cart</h2>
-  <section class="all-items" ng-show="data.cart[0].length !== 0">
+  <h2 class="page-title" ng-show="data.totalCartQty">Shopping Cart</h2>
+  <section class="all-items" ng-show="data.totalCartQty">
     <div class="cart-headers">
       <p>item</p>
       <p id="cart-quantity-header">quantity</p>
@@ -29,7 +29,7 @@
       <button class="checkout-cta form-control"><a ui-sref="checkoutMain">Checkout</a></button>
     </div>
   </section>
-  <section ng-show="data.cart[0].length === 0">
+  <section ng-show="!data.totalCartQty">
     <h2 class="page-title">Cart Empty</h2>
     <button class="cart-empty-cta form-control" ui-sref="productsPage">Add Indigo Inventory to Cart</button>
   </section>

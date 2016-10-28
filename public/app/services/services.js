@@ -1,37 +1,19 @@
 // TTI Service - connect to server-side TTI API
 app.factory('TTI_API', ['$http', function($http) {
   var service = {};
-  service.createRespondent = function() {
-    console.log("create respondent button clicked");
-    $http({
-      method: 'POST',
-      url: 'https://api.ttiadmin.com/',
-      headers: {
-        "Authorization": "Basic c2hlcmlzbWl0aDpJbmRpZ29GciMj",
-        "Content-Type": "application/json"},
-      data: {
-        "first_name": "paul",
-        "last_name": "dziemianowicz",
-        "gender": "male",
-        "email": "pauldziemianowicz@gmail.com",
-        "company": "Indigo Project",
-        "position_job": "wizard"
-      }
-    }).then(function(data) {
-      console.log(" --- Create Respondent Post Success --- ");
-      console.log(data);
-    })
-  }
-  service.postRespondentToServer = function(data) {
-    console.log(data.first_name);
-    console.log(JSON.stringify(data));
+  service.showLink = function(accountID, linkID) {
+    console.log(accountID, linkID);
     $http({
       method: "POST",
-      url: "/api/createrespondent",
-      data: data,
-      headers: {
-        "Content-Type": "application/json"
-      }
+      url: "/api/showLink",
+      data: { accountID: accountID, linkID: linkID }
+    })
+  }
+  service.createRespondent = function(school, data) {
+    $http({
+      method: "POST",
+      url: "api/createRespondent",
+      data: { school: school, data: data }
     })
   }
   return service;
@@ -50,7 +32,7 @@ app.factory('Mailgun', ['$http', '$location', '$timeout', function($http, $locat
         $http({
           method: "POST",
           url: "/mail",
-          data: [formData, data.data.password] 
+          data: [formData, data.data.password]
         }).then(function(maildata) {
         console.log(maildata.status === 200);
         if(maildata.status === 200) {
@@ -95,7 +77,7 @@ app.factory('Moltin_API', ['$http', function($http){
         url: "/api/env"
       }).then(function(data) {
         if (data) {
-          resolve(data)
+          resolve(data);
         } else {
           reject('no data');
         }
@@ -105,4 +87,44 @@ app.factory('Moltin_API', ['$http', function($http){
     })
   }
   return service;
+}])
+
+
+// Service for converting school codes to full names and vice versa
+app.factory("school_link_conv", ['$http', '$stateParams', function($http, $stateParams) {
+  return {
+    getFullNameByCode: function(code) {
+      return new Promise(function(resolve, reject)  {
+        $http({
+          method: "GET",
+          url: "/school-links-s/get-full-name/" + code
+        }).then(function(data) {
+          console.log(data);
+          if (data) {
+            resolve(data);
+          } else {
+            reject('no data')
+          }
+        }).catch(function(err) {
+          console.log(err);
+        })
+      })
+    },
+    getCodeByFullName: function(fullName) {
+      return new Promise(function(resolve, reject) {
+        $http({
+          method: "GET",
+          url: "/school-links-s/get-code/" + fullName
+        }).then(function(data) {
+          if (data) {
+            resolve(data);
+          } else {
+            reject('no data')
+          }
+        }).catch(function(err) {
+          console.log(err);
+        })
+      })
+    },
+  };
 }])

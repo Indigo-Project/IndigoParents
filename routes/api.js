@@ -13,6 +13,7 @@ router.get('/', function(req, res, next) {
   res.send("local api endpoint");
   mongo.mongoDBConnect(mongo.indigoTestURI)
   .then(function(data) {
+    console.log(data.message);
     db.close(data.db);
   })
 });
@@ -23,12 +24,13 @@ router.get('/env', function(req, res, next){
   res.send(env);
 })
 
-// GET moltin product by 'slug'
+// *** MOLTIN ***
+
+// GET moltin product by 'SLUG' (this is what appears on product page)
 router.get('/products/:slug', function(req, res, next) {
   moltin.Authenticate(function() {
     var product = moltin.Product.Find({slug: req.params.slug},
     function(product) {
-      // console.log(product);
       res.send({
         product_title: product[0].title,
         product_description: product[0].description,
@@ -44,23 +46,44 @@ router.get('/products/:slug', function(req, res, next) {
   });
 });
 
+// Create Moltin Cart
+
+// ** TEMP : ACCESS PASSWORDS THROUGH MLABS DB **
+
+router.get('/:link/passwords', function(req, res, next) {
+  mongo.mongoDBConnect(mongo.indigoTestURI).
+  then(function(data) {
+    mongo.getAllPasswordsByLink(data.db, req.params.link)
+    .then(function(linkPasswords) {
+      res.send({ link_id: req.params.link, passwords: linkPasswords });
+    })
+  })
+})
+
 // Retrieve fresh unassigned password by link, assign to user, and mark as assigned
 router.get('/:link/passwords/assign-new', function(req, res, next) {
   mongo.mongoDBConnect(mongo.indigoTestURI)
   .then(function(data) {
     mongo.getAllPasswordsByLink(data.db, req.params.link)
-    .then(function(respondentPasswords) {
-      console.log('resondentPasswords', respondentPasswords);
-      var unassignedPasswords = [];
+    .then(function(linkPasswords) {
+      console.log('resondentPasswords', linkPasswords);
       var passwordToAssign = "";
-      for (var i = 0; i < respondentPasswords.length; i++) {
-        if (respondentPasswords[i].assigned === false) {
+      var indexOfPasswordToAssign = "";
+      var unassignedPasswordExists = false;
+      for (var i = 0; i < linkPasswords.length; i++) {
+        if (linkPasswords[i].assigned === false) {
           console.log('false');
-          unassignedPasswords.push(respondentPasswords[i]);
+          unassignedPasswordExists = true;
+          passwordToAssign = linkPasswords[i].password;
+          indexOfPasswordToAssign = i;
+          break;
         }
       }
-      passwordToAssign = unassignedPasswords[0].password;
+      console.log(indexOfPasswordToAssign);
       console.log(passwordToAssign);
+      if(!unassignedPasswordExists) {
+        res.end("all passwords for this link have been assigned - generate new passwords")
+      }
       mongo.assignPassword(data.db, req.params.link, passwordToAssign)
       .then(function(result){
         mongo.mongoDBDisconnect(data.db);
@@ -76,60 +99,54 @@ router.get('/:link/passwords/assign-new', function(req, res, next) {
   });
 });
 
+// *** TTI ***
+
+// GET TTI LINK DATA BASED ON ADMIN PORTAL SCHOOL SELECTION
+router.post('/showLink', function(req, res, next) {
+  var selectedSchool = req.body.selectedSchool;
+  var ssRef = TTI_API.linkLocations[selectedSchool];
+  var options = {
+    url: TTI_API.APIs.showLink.generateEndpoint(ssRef.accountID, ssRef.mainLink.id),
+    headers: {
+      'Authorization': 'Basic c2hlcmlzbWl0aDpJbmRpZ29GciMj',
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    }
+  };
+  request(options, function(err, response, body) {
+    if (err) {
+      console.log(err);
+      res.end();
+    } else {
+      res.end(body);
+    }
+  })
+})
+
 // POST to local API with TTI_API
 router.post('/createrespondent', function(req, res, next) {
-
-  console.log("posted respondent data to local server /api: ", req.body);
-  mongo.mongoDBConnect(mongo.indigoTestURI)
-  .then(function(data) {
-    // console.log(data.message);
-    mongo.newRespondent(data.db, req.body)
-    .then(function(data) {
-      console.log(TTI_API.APIs.createRespondent.generateEndpoint(TTI_API.linkLocations.indigoParentsTest.accountID, TTI_API.linkLocations.indigoParentsTest.mainLink.id));
-      console.log("req.body", req.body);
-
-      var opts = {
-        url: TTI_API.APIs.createRespondent.generateEndpoint(TTI_API.linkLocations.indigoParentsTest.accountID, TTI_API.linkLocations.indigoParentsTest.mainLink.id),
-        headers: {
-          'Authorization': 'Basic c2hlcmlzbWl0aDpJbmRpZ29GciMj',
-          'Content-Type': 'application/x-www-form-urlencoded',
-          'Accept': 'application/x-www-form-urlencoded'
-        },
-        method: 'POST',
-        auth: { user: 'sherismith', password: 'IndigoFr##' },
-        // json: true,
-        form: req.body
-        // formData: {
-        //   first_name: 'paul',
-        //   last_name: 'dziemianowicz',
-        //   gender: 'M',
-        //   email: 'pauldziemianowicz@gmail.com'
-        // }
-        // formData: {
-        //   first_name: req.body.first_name,
-        //   last_name: req.body.last_name,
-        //   gender: req.body.gender,
-        //   email: req.body.email
-        // }
-      };
-
-      request(opts, function(err,httpResponse,body){
-        if (err) {
-          console.log("--- POST REQUEST ERROR ---", err);
-        } else {
-        console.log(httpResponse.headers.location);
-        console.log('response body', body);
-        }
-      })
-
-    })
-    .catch(function(err) {
-      console.log('ERROR ERROR', err);
-    })
+  var accountID = TTI_API.linkLocations[req.body.school].accountID;
+  var linkID = TTI_API.linkLocations[req.body.school].mainLink.id;
+  var respondentData = req.body.data;
+  var options = {
+    method: "POST",
+    url: TTI_API.APIs.createRespondent.generateEndpoint(accountID, linkID),
+    headers: {
+      'Authorization': 'Basic ' + TTI_API.linkLocations[req.body.school].auth,
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    },
+    json: true,
+    body: respondentData
+  };
+  request(options, function(err, httpResponse, body){
+    if (err) {
+      console.log("--- POST REQUEST ERROR ---", err);
+    } else {
+      console.log(httpResponse.headers.location);
+      console.log('response body', body);
+    }
   })
-  .catch(function(err) {
-    console.log('ERROR ERROR', err);
-  })
-});
+})
 
 module.exports = router;

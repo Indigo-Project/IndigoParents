@@ -63,21 +63,21 @@ var database = {
   // Add fresh passwords to a Particular Link
   addPasswords: function(db, link) {
 
-    // Access the respondentPasswords collection
-    var collection = db.collection('respondentPasswords');
+    // Access the linkPasswords collection
+    var collection = db.collection('linkPasswords');
   },
 
   getAllPasswordsByLink: function(db, link) {
 
-    // Access the respondentPasswords collection
-    var cursor = db.collection('respondentPasswords').find();
+    // Access the linkPasswords collection
+    var cursor = db.collection('linkPasswords').find();
     return cursor.toArray();
   },
 
   assignPassword: function(db, link, pw) {
 
     return new Promise(function(resolve, reject) {
-      var collection = db.collection('respondentPasswords');
+      var collection = db.collection('linkPasswords');
       collection.updateOne({password: pw}, {$set: {assigned: true}}, function(err, result) {
         assert.equal(null, err);
         assert.equal(1, result.matchedCount);

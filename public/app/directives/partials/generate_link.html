@@ -1,0 +1,9 @@
+<section class="generate-link">
+  <h4 class="select-school">Select School:</h4>
+  <select class="form-control" ng-model="view.selectedSchool" ng-change="data.generateLink()">
+    <option value="default"> -- no selection -- </option>
+    <option value="test">Indigo Parents Test</option>
+    <option value="caprock">Caprock Academy</option>
+  </select>
+  <a>{{view.schoolLink}}</a>
+</section>

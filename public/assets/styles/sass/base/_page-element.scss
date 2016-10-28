@@ -391,6 +391,23 @@ div.checkout-user {
   .checkout-top-row {
     display: flex;
   }
+  .checkout-mid-row {
+    display: flex;
+    select {
+      width: 50px;
+      margin-right: 15px;
+    }
+  }
+  .checkout-bottom-row {
+    display: flex;
+    input {
+      width: 150px;
+      &.company {
+        margin-right: 15px;
+        width: 170px;
+      }
+    }
+  }
   input {
     margin-bottom: 10px;
     &.first-name {
@@ -446,4 +463,60 @@ main.checkout-success {
     background-color: rgba(79, 68, 152, 1);
     margin-top: 30px;
   }
+}
+
+// ADMIN
+
+form.admin-login {
+  margin: 15px 0px 0px 10px;
+  div {
+    display: flex;
+    margin-top: 10px;
+  }
+  input.form-control {
+    width: 200px;
+    margin-right: 15px;
+  }
+  button.form-control {
+    width: 150px;
+  }
+}
+
+h3.admin-portal {
+  margin: 15px 0px 0px 10px;
+}
+
+section.select-function {
+  margin: 25px 10px 0px 10px;
+  padding: 0px 0px 20px 0px;
+  select {
+    margin-top: 5px;
+    width: 200px;
+  }
+  border-bottom: 1px solid black;
+}
+
+section.add-passwords {
+  margin: 25px 10px 0px 10px;
+  select {
+    margin: 5px 0px 10px 0px;
+    width: 400px;
+  }
+}
+
+section.generate-link {
+  margin: 25px 10px 0px 10px;
+  select {
+    margin: 5px 0px 10px 0px;
+    width: 400px;
+  }
+  a {
+    margin-left: 5px;
+  }
+}
+
+// SCHOOL SITE REDIRECT SEQUENCE
+h2.redirect-text {
+  margin: 30px 0px 0px 438px;
+  color: rgb(130, 130, 130);
 }

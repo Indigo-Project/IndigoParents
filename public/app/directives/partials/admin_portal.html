@@ -1,1 +1,10 @@
-<h1>ADMIN</h1>
+<h3 class="admin-portal">ADMIN PORTAL</h3>
+
+<section class="select-function">
+  <h4 class="select-function">Select Function:</h4>
+  <select class="form-control" ng-model="view.selectedFunction" ng-change="view.accessFunction()">
+    <option value="adminPortal"> -- no selection -- </option>
+    <option value="generateLink">Generate Link</option>
+    <!-- <option value="addPasswords">Add Passwords</option> -->
+  </select>
+</section>

@@ -308,6 +308,18 @@ div.checkout-user {
   margin-bottom: 20px; }
   div.checkout-user .checkout-top-row {
     display: flex; }
+  div.checkout-user .checkout-mid-row {
+    display: flex; }
+    div.checkout-user .checkout-mid-row select {
+      width: 50px;
+      margin-right: 15px; }
+  div.checkout-user .checkout-bottom-row {
+    display: flex; }
+    div.checkout-user .checkout-bottom-row input {
+      width: 150px; }
+      div.checkout-user .checkout-bottom-row input.company {
+        margin-right: 15px;
+        width: 170px; }
   div.checkout-user input {
     margin-bottom: 10px; }
     div.checkout-user input.first-name {
@@ -347,5 +359,45 @@ main.checkout-success {
     color: white;
     background-color: #4f4498;
     margin-top: 30px; }
+
+form.admin-login {
+  margin: 15px 0px 0px 10px; }
+  form.admin-login div {
+    display: flex;
+    margin-top: 10px; }
+  form.admin-login input.form-control {
+    width: 200px;
+    margin-right: 15px; }
+  form.admin-login button.form-control {
+    width: 150px; }
+
+h3.admin-portal {
+  margin: 15px 0px 0px 10px; }
+
+section.select-function {
+  margin: 25px 10px 0px 10px;
+  padding: 0px 0px 20px 0px;
+  border-bottom: 1px solid black; }
+  section.select-function select {
+    margin-top: 5px;
+    width: 200px; }
+
+section.add-passwords {
+  margin: 25px 10px 0px 10px; }
+  section.add-passwords select {
+    margin: 5px 0px 10px 0px;
+    width: 400px; }
+
+section.generate-link {
+  margin: 25px 10px 0px 10px; }
+  section.generate-link select {
+    margin: 5px 0px 10px 0px;
+    width: 400px; }
+  section.generate-link a {
+    margin-left: 5px; }
+
+h2.redirect-text {
+  margin: 30px 0px 0px 438px;
+  color: #828282; }
 
 /*# sourceMappingURL=style.css.map */

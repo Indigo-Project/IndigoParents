@@ -1,16 +1,27 @@
 <main class="page-body-full checkout-page">
   <h1>Finalize and Submit Purchase</h1>
-  <h4 class="checkout-context">Once your purchase is successfully submitted, you will receive access to your Indigo Inventory via the provided email</h4>
+  <h4 class="checkout-context">Once your purchase is successfully submitted, you will receive access to your Indigo Inventory via the email you provide</h4>
   <section class="checkout">
     <form class="control-group checkout-form" name="submitCheckout" ng-submit="data.purchaseSubmission()">
       <div class="checkout-left">
         <div class="checkout-user">
           <h4 class="checkout-subtitle">Personal Information</h4>
           <div class="checkout-top-row">
-            <input class="form-control first-name" type="text" placeholder="first name" ng-model="form.firstName" required>
-            <input class="form-control last-name" type="text" placeholder="last name" ng-model="form.lastName" required>
+            <input class="form-control first-name" type="text" placeholder="first name" ng-model="form.first_name" required>
+            <input class="form-control last-name" type="text" placeholder="last name" ng-model="form.last_name" required>
           </div>
-          <input class="form-control email" type="email" placeholder="email" ng-model="form.email" required>
+          <div class="checkout-mid-row">
+            <select class="form-control" ng-model="form.gender" required>
+              <option value="" disabled selected>M/F</option>
+              <option value="M">M</option>
+              <option value="F">F</option>
+            </select>
+            <input class="form-control email" type="email" placeholder="email" ng-model="form.email" required>
+          </div>
+          <div class="checkout-bottom-row">
+            <input class="form-control company" type="text" placeholder="company" ng-model="form.company">
+            <input class="form-control job/position" type="text" placeholder="job/position" ng-model="form.position_job">
+          </div>
         </div>
         <div class="checkout-payment">
           <h4 class="checkout-subtitle">Payment Method</h4>

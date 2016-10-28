@@ -1,17 +1,24 @@
-app.controller('Cart_Controller', ['$scope', '$state', 'Moltin_API', function($scope, $state, Moltin_API) {
+app.controller('Cart_Controller', ['$scope', '$state', 'localStorageService', 'Moltin_API', function($scope, $state, localStorageService, Moltin_API) {
 
   $scope.view = {};
   $scope.data = {};
   $scope.data.mastheadLoaded = true;
-  $scope.data.cart = JSON.parse(localStorage.getItem('moltin_cart')) || [];
-  $scope.data.totalCartQty = $scope.data.cart.length || 0;
+  $scope.data.cart = localStorageService.get('cart') || [];
+  console.log($scope.data.cart);
+  if ($scope.data.cart['0']['826f6d0ae11323676ad968c82c15fa5b']) {
+    $scope.data.totalCartQty = $scope.data.cart['0']['826f6d0ae11323676ad968c82c15fa5b'].quantity
+  } else {
+    $scope.data.totalCartQty = 0;
+  }
+  console.log($scope.data.totalCartQty);
   $scope.view.cartEmpty = $scope.data.totalCartQty <= 0;
+  console.log($scope.view.cartEmpty);
   $scope.data.cartLoaded = false;
-  // console.log("ls moltin_cart: ", $scope.data.cart);
+  // console.log("ls cart: ", $scope.data.cart);
   // console.log($scope.data.cart[0]['826f6d0ae11323676ad968c82c15fa5b'].quantity <= 0);
-  // console.log("ls moltin_cart: ", $scope.data.cart[0]['826f6d0ae11323676ad968c82c15fa5b'].quantity);
+  // console.log("ls cart: ", $scope.data.cart[0]['826f6d0ae11323676ad968c82c15fa5b'].quantity);
 
-  // $scope.data.cart = JSON.parse(localStorage.getItem('indigoParentsCart')) || [];
+  // $scope.data.cart = JSON.parse(localStorageService.get('indigoParentsCart')) || [];
   // $scope.data.displayCart = function() {
   //   Moltin_API.getIndigoInventory()
   //     .then(function(data){
@@ -19,13 +26,11 @@ app.controller('Cart_Controller', ['$scope', '$state', 'Moltin_API', function($s
   //     })
   // }
   $scope.data.updateCartStatus = function() {
-    console.log($scope.data.cart[0]);
     if ($scope.data.totalCartQty > 0) {
       $scope.view.cartEmpty = false;
     } else {
       $scope.view.cartEmpty = true;
     }
-    // $scope.$apply()
   }
   $scope.data.updateCartStatus();
 
@@ -46,10 +51,12 @@ app.controller('Cart_Controller', ['$scope', '$state', 'Moltin_API', function($s
           var cart = moltin.Cart.Contents();
           var cartContents = [];
           cartContents.push(cart.contents);
-          localStorage.setItem("moltin_cart", JSON.stringify(cartContents));
-          $scope.data.cart = JSON.parse(localStorage.getItem('moltin_cart'));
-          $state.transitionTo('shoppingCart');
+          localStorageService.set("cart", cartContents);
+          $scope.data.cart = localStorageService.get('cart');
+          console.log($scope.data.cart);
           $scope.data.calcTotalCartQty();
+          $scope.$apply();
+          $state.transitionTo('shoppingCart');
         }).catch(function(error) {
           console.log(error);
         })
@@ -68,9 +75,12 @@ app.controller('Cart_Controller', ['$scope', '$state', 'Moltin_API', function($s
           var cart = moltin.Cart.Contents();
           var cartContents = [];
           cartContents.push(cart.contents);
-          localStorage.setItem("moltin_cart", JSON.stringify(cartContents));
-          $scope.data.cart = JSON.parse(localStorage.getItem('moltin_cart'));
+          localStorageService.set("cart", cartContents);
+          $scope.data.cart = localStorageService.get('cart');
+          $scope.data.totalCartQty = 0;
+          $scope.data.updateCartStatus();
           $scope.$apply();
+          $state.reload();
         },
         function(error) {
           console.log(error);
@@ -94,8 +104,8 @@ app.controller('Cart_Controller', ['$scope', '$state', 'Moltin_API', function($s
           var cart = moltin.Cart.Contents();
           var cartContents = [];
           cartContents.push(cart.contents);
-          localStorage.setItem("moltin_cart", JSON.stringify(cartContents));
-          $scope.data.cart = JSON.parse(localStorage.getItem('moltin_cart'));
+          localStorageService.set("cart", cartContents);
+          $scope.data.cart = localStorageService.get('cart');
           $scope.$apply();
           $state.reload();
         },

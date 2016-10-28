@@ -1,6 +1,8 @@
-var app = angular.module('indigo', ['ui.router']);
+var app = angular.module('indigo', ['ui.router', 'LocalStorageModule']);
 
-app.config(function($stateProvider, $urlRouterProvider, $locationProvider) {
+app.config(function($stateProvider, $urlRouterProvider, $locationProvider, localStorageServiceProvider) {
+
+  localStorageServiceProvider.setPrefix("indigoParents");
 
   $urlRouterProvider.otherwise("/");
 
@@ -25,14 +27,31 @@ app.config(function($stateProvider, $urlRouterProvider, $locationProvider) {
       url: '/success',
       templateUrl: "templates/checkout_success.html"
     })
-    // .state('adminPortal', {
-    //   url: '/admin',
-    //   templateUrl: "templates/admin_portal.html"
-    // })
-    // .state('TTITest', {
-    //   url: '/api',
-    //   templateUrl: "templates/utility/tti_api_test.html"
-    // })
+    .state('adminLogin', {
+      url: '/admin',
+      templateUrl: "templates/admin_login.html"
+    })
+    .state('adminPortal', {
+      url: '/admin/portal/default',
+      templateUrl: "templates/admin_portal.html"
+    })
+    .state('addPasswords', {
+      url: '/admin/portal/addpasswords',
+      templateUrl: "templates/add_passwords.html"
+    })
+    .state('generateLink', {
+      url: '/admin/portal/generatelink',
+      templateUrl: "templates/generate_link.html"
+    })
+    .state('schoolSiteRedirect', {
+      url: '/school-links/:name',
+      templateUrl: "templates/school_site_redirect.html"
+    })
+    .state('TTITest', {
+      url: '/api-test',
+      templateUrl: "templates/utility/tti_api_test.html",
+      controller: "TTI_Controller"
+    })
 
     $locationProvider.html5Mode(true);
 })
