@@ -6,7 +6,15 @@ app.controller('Cart_Controller', ['$scope', '$state', 'localStorageService', 'M
   $scope.data.mastheadLoaded = true;
 
   // set cartKey variable to key of cart object
-  var cartKey = Object.keys(localStorageService.get('cart')['0'])[0] || null;
+  // console.log(localStorageService.get('cart'));
+  // console.log(Object.keys(localStorageService.get('cart')['0']));
+  // var cartKey = Object.keys(localStorageService.get('cart')['0'])[0] || null;
+
+  if (localStorageService.get('cart') !== null) {
+    var cartKey = Object.keys(localStorageService.get('cart')['0'])[0]
+  } else {
+    var cartKey = null;
+  }
 
   // if no cartKey, $scope.data.cart = null, otherwise = localStorage Cart Object
   if(cartKey === null) {
