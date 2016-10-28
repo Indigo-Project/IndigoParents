@@ -4,15 +4,12 @@ app.controller('Cart_Controller', ['$scope', '$state', 'localStorageService', 'M
   $scope.data = {};
   $scope.data.mastheadLoaded = true;
   $scope.data.cart = localStorageService.get('cart') || [];
-  console.log($scope.data.cart);
   if ($scope.data.cart['0']['826f6d0ae11323676ad968c82c15fa5b']) {
     $scope.data.totalCartQty = $scope.data.cart['0']['826f6d0ae11323676ad968c82c15fa5b'].quantity
   } else {
     $scope.data.totalCartQty = 0;
   }
-  console.log($scope.data.totalCartQty);
   $scope.view.cartEmpty = $scope.data.totalCartQty <= 0;
-  console.log($scope.view.cartEmpty);
   $scope.data.cartLoaded = false;
   // console.log("ls cart: ", $scope.data.cart);
   // console.log($scope.data.cart[0]['826f6d0ae11323676ad968c82c15fa5b'].quantity <= 0);
@@ -53,7 +50,6 @@ app.controller('Cart_Controller', ['$scope', '$state', 'localStorageService', 'M
           cartContents.push(cart.contents);
           localStorageService.set("cart", cartContents);
           $scope.data.cart = localStorageService.get('cart');
-          console.log($scope.data.cart);
           $scope.data.calcTotalCartQty();
           $scope.$apply();
           $state.transitionTo('shoppingCart');
@@ -71,6 +67,7 @@ app.controller('Cart_Controller', ['$scope', '$state', 'localStorageService', 'M
     .then(function(env) {
       var moltin = new Moltin({publicId: env.data.MOLTIN_CLIENT_ID});
       moltin.Authenticate(function() {
+        // var cartID =
         moltin.Cart.Remove('826f6d0ae11323676ad968c82c15fa5b', function() {
           var cart = moltin.Cart.Contents();
           var cartContents = [];
