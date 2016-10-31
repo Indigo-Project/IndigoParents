@@ -22,7 +22,7 @@ var mg = new Mailgun(process.env.MAILGUN_API_KEY);
 router.post('/send', function(req, res, next) {
   console.log('post arrived at /mail');
   var linkId = TTI_API.linkLocations[req.body.schoolCode].mainLink.id
-  mg.sendText('IndigoParents@indigoproject.org', req.body.data.email, req.body.data.first_name + ', Access Your Indigo Me Assessment', 'Here is the link: https://www.ttisurvey.com/' + linkId + ', and password: ' + req.body.data.passwd + ' . Click on the link and enter your password to begin the Indigo Assessment.', {'X-Campaign-Id': 'indigoParents'}
+  mg.sendText('IndigoParents@indigoproject.org', req.body.data.email, req.body.data.first_name + ', Access Your Indigo Me Assessment', req.body.data.first_name + ', Here is your link: https://www.ttisurvey.com/' + linkId + ', and password: ' + req.body.data.passwd + ' . Click on the link and enter your password to begin the Indigo Assessment.', {'X-Campaign-Id': 'indigoParents'}
   , function(err) {
     err && console.log(err)
   });
