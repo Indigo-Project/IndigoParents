@@ -7,8 +7,8 @@
         <div class="checkout-user">
           <h4 class="checkout-subtitle">Personal Information</h4>
           <div class="checkout-top-row">
-            <input class="form-control first-name" type="text" placeholder="first name" ng-model="form.first_name" required>
-            <input class="form-control last-name" type="text" placeholder="last name" ng-model="form.last_name" required>
+            <input class="form-control first-name" type="text" placeholder="first name" ng-model="form.firstName" required>
+            <input class="form-control last-name" type="text" placeholder="last name" ng-model="form.lastName" required>
           </div>
           <div class="checkout-mid-row">
             <select class="form-control" ng-model="form.gender" required>
@@ -25,11 +25,15 @@
         </div>
         <div class="checkout-payment">
           <h4 class="checkout-subtitle">Payment Method</h4>
-          <input class="form-control card-name" type="text" placeholder="full name as appears on card" ng-model="form.cardName" required>
-          <input class="form-control card-number" type="number" placeholder="credit/debit card number" ng-model="form.cardNumber" required>
+          <div class="checkout-top-row">
+            <input class="form-control billing-first-name" type="text" placeholder="first name on card" ng-model="form.billingFirstName" required>
+            <input class="form-control billing-last-name" type="text" placeholder="last name on card" ng-model="form.billingLastName" required>
+          </div>
+          <input class="form-control card-number" type="text" placeholder="credit/debit card number" ng-model="form.cardNumber" pattern=".{16}" title="must be 16 digits in the following format: '4242424242424242'" required>
           <div class="checkout-bottom-row">
-            <input class="form-control exp-date" type="text" placeholder="mm/yy" ng-model="form.expDate" required>
-            <input class="form-control sec-number" type="number" placeholder="CVC/CVV" ng-model="form.secNumber" required>
+            <input class="form-control exp-month" type="text" placeholder="08" ng-model="form.expM" pattern=".{2}" title="please enter expiration month in the following format: '02' = February" required>
+            <input class="form-control exp-year" type="text" placeholder="2020" ng-model="form.expY"  pattern=".{4}" title="please enter the expiration year in the following format: '2020'"required>
+            <input class="form-control sec-number" type="text" placeholder="CVC/CVV" ng-model="form.CVV"  pattern=".{3}" title="please enter 3 digit CVV security code in the following format: '123'" required>
           </div>
         </div>
         <a ui-sref="shoppingCart"><< back</a>
@@ -43,6 +47,8 @@
           <p>{{data.cart.price * data.cart.quantity | currency}}</p>
         </div>
         <input class="form-control submit-purchase" type="submit" value="Submit Purchase" required>
+        <h4 class="payment-process" ng-show="view.processingPayment === 'processing'">Processing Payment...</h4>
+        <h4 class="payment-process" ng-show="view.processingPayment === 'success'">Successful Transaction! Check your email..</h4>
       </div>
     </form>
   </section>

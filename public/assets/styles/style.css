@@ -330,12 +330,20 @@ div.checkout-payment {
   display: flex;
   flex-direction: column;
   margin-bottom: 20px; }
+  div.checkout-payment .checkout-top-row {
+    display: flex; }
   div.checkout-payment .checkout-bottom-row {
     display: flex; }
   div.checkout-payment input {
     margin-bottom: 10px; }
-    div.checkout-payment input.exp-date {
-      width: 100px; }
+    div.checkout-payment input.billing-first-name {
+      width: 140px;
+      margin-right: 15px; }
+    div.checkout-payment input.exp-month {
+      width: 50px;
+      margin-right: 15px; }
+    div.checkout-payment input.exp-year {
+      width: 70px; }
     div.checkout-payment input.sec-number {
       width: 100px;
       margin-left: 15px; }
@@ -347,6 +355,10 @@ input.submit-purchase {
   color: white;
   background-color: #7BBF4A;
   margin-top: 20px; }
+
+h4.payment-process {
+  margin-top: 65px;
+  width: 165px; }
 
 main.checkout-success {
   padding: 100px; }

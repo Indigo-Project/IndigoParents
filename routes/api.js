@@ -46,7 +46,45 @@ router.get('/products/:slug', function(req, res, next) {
   });
 });
 
-// Create Moltin Cart
+// Add Product to moltin Cart (server-side checkout flow)
+router.post('/products/atc/indigo-inventory', function(req, res, next) {
+  console.log(req.body);
+  var quantity = req.body.quantity;
+  moltin.Authenticate(function() {
+    // moltin.Cart.Insert('1334169416354496686', req.body.qty, null, function(cart) {
+    //   console.log(cart);
+    // }, function(error) {
+    //     // Something went wrong...
+    // });
+  });
+})
+
+// Retrieve Moltin Checkout Options (server-side checkout flow)
+router.post('/checkoutinfo', function(req, res, next) {
+  var cart = req.body.cart;
+  var iCartId = req.body.cartId;
+  var oCartId = cart[0][iCartId].id;
+  moltin.Authenticate(function(d) {
+    moltin.Cart.Contents(function(items) {
+    console.log(items);
+    }, function(error) {
+    // Something went wrong...
+    });
+    // moltin.Cart.Checkout(function(checkout) {
+    //   console.log(checkout);
+    // }, function(error) {
+    //   console.log(error);
+    // });
+    // var options = {
+    //   method: 'GET',
+    //   url: "https://api.molt.in/v1/carts/oCartId/checkout",
+    //   auth: { bearer: d.access_token }
+    // }
+    // request(options, function(err, httpResponse, body) {
+    //   console.log(body);
+    // })
+  })
+})
 
 // ** TEMP : ACCESS PASSWORDS THROUGH MLABS DB **
 
@@ -124,7 +162,7 @@ router.post('/showLink', function(req, res, next) {
 })
 
 // POST to local API with TTI_API
-router.post('/createrespondent', function(req, res, next) {
+router.post('/create-respondent', function(req, res, next) {
   var accountID = TTI_API.linkLocations[req.body.school].accountID;
   var linkID = TTI_API.linkLocations[req.body.school].mainLink.id;
   var respondentData = req.body.data;
@@ -145,6 +183,7 @@ router.post('/createrespondent', function(req, res, next) {
     } else {
       console.log(httpResponse.headers.location);
       console.log('response body', body);
+      res.send(body);
     }
   })
 })

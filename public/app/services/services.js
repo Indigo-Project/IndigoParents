@@ -10,10 +10,20 @@ app.factory('TTI_API', ['$http', function($http) {
     })
   }
   service.createRespondent = function(school, data) {
-    $http({
-      method: "POST",
-      url: "api/createRespondent",
-      data: { school: school, data: data }
+    return new Promise(function(resolve,reject) {
+      $http({
+        method: "POST",
+        url: "api/create-respondent",
+        data: { school: school, data: data }
+      }).then(function(data) {
+        if (data) {
+          resolve(data)
+        } else {
+          reject('error')
+        }
+      }).catch(function(error) {
+        console.log(error);
+      })
     })
   }
   return service;
@@ -22,18 +32,14 @@ app.factory('TTI_API', ['$http', function($http) {
 // Mailgun Service - connect to server-side Moltin API
 app.factory('Mailgun', ['$http', '$location', '$timeout', function($http, $location, $timeout) {
   var service = {};
-  service.successfulPurchaseEmail = function(formData) {
+  service.successfulPurchaseEmail = function(data, schoolCode) {
     return new Promise(function(resolve, reject) {
+      console.log(data);
       $http({
-        method: "GET",
-        url: "/api/308149BWF/passwords/assign-new"
-      }).then(function(data) {
-        console.log('mailgun service GET 1', data);
-        $http({
-          method: "POST",
-          url: "/mail",
-          data: [formData, data.data.password]
-        }).then(function(maildata) {
+        method: "POST",
+        url: "/mail/send",
+        data: { data: data, schoolCode: schoolCode }
+      }).then(function(maildata) {
         console.log(maildata.status === 200);
         if(maildata.status === 200) {
           resolve('posted to /mail url, email sent');
@@ -43,11 +49,8 @@ app.factory('Mailgun', ['$http', '$location', '$timeout', function($http, $locat
       }).catch(function(err) {
         console.log(err);
       })
-    }).catch(function(err) {
-      console.log(err);
     })
-  })
-}
+  }
   return service;
 }])
 
