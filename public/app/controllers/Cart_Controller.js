@@ -10,11 +10,15 @@ app.controller('Cart_Controller', ['$scope', '$state', 'localStorageService', 'M
   // console.log(Object.keys(localStorageService.get('cart')['0']));
   // var cartKey = Object.keys(localStorageService.get('cart')['0'])[0] || null;
 
+  // console.log(localStorageService.get('cart'));
   if (localStorageService.get('cart') !== null) {
-    var cartKey = Object.keys(localStorageService.get('cart')['0'])[0]
+    var cartKey = Object.keys(localStorageService.get('cart')['0'])[0];
+    $scope.data.cartKey = Object.keys(localStorageService.get('cart')['0'])[0];
   } else {
     var cartKey = null;
+    $scope.data.cartKey = null;
   }
+  console.log($scope.data.cartKey);
 
   // if no cartKey, $scope.data.cart = null, otherwise = localStorage Cart Object
   if(cartKey === null) {
@@ -50,10 +54,13 @@ app.controller('Cart_Controller', ['$scope', '$state', 'localStorageService', 'M
 
   // calculate total cart quantity
   $scope.data.calcTotalCartQty = function() {
-    if (cartKey === null) {
+    if (cartKey === null || cartKey === undefined) {
       $scope.data.totalCartQty = 0;
     } else {
-      $scope.data.totalCartQty = $scope.data.cart['0'][cartKey].quantity || 0;
+      // console.log($scope.data.cart[0]);
+      // console.log($scope.data.cart['0']);
+      // console.log(cartKey);
+      $scope.data.totalCartQty = $scope.data.cart[0][cartKey].quantity || 0;
     }
     $scope.data.updateCartStatus();
   }
@@ -72,6 +79,11 @@ app.controller('Cart_Controller', ['$scope', '$state', 'localStorageService', 'M
           var cartContents = [];
           cartContents.push(cart.contents);
           localStorageService.set("cart", cartContents);
+          if (localStorageService.get('cart') !== null) {
+            var cartKey = Object.keys(localStorageService.get('cart')['0'])[0]
+          } else {
+            var cartKey = null;
+          }
           if(cartKey === null) {
             $scope.data.cart = [];
             var iiCartItem = null;
@@ -79,6 +91,7 @@ app.controller('Cart_Controller', ['$scope', '$state', 'localStorageService', 'M
             $scope.data.cart = localStorageService.get('cart');
             var iiCartItem = $scope.data.cart['0'][cartKey];
           }
+          console.log(cartKey);
           $scope.data.calcTotalCartQty();
           $scope.$apply();
           $state.transitionTo('shoppingCart');
@@ -103,8 +116,13 @@ app.controller('Cart_Controller', ['$scope', '$state', 'localStorageService', 'M
           var cartContents = [];
           cartContents.push(cart.contents);
           localStorageService.set("cart", cartContents);
-          $scope.data.cart = localStorageService.get('cart');
+          $scope.data.cart = localStorageService.get("cart");
           $scope.data.totalCartQty = 0;
+          if (localStorageService.get('cart') !== null) {
+            var cartKey = Object.keys(localStorageService.get('cart')['0'])[0]
+          } else {
+            var cartKey = null;
+          }
           $scope.data.updateCartStatus();
           $scope.$apply();
           $state.reload();
@@ -143,6 +161,14 @@ app.controller('Cart_Controller', ['$scope', '$state', 'localStorageService', 'M
     }).catch(function(error) {
       console.log(error);
     })
+  }
+
+  $scope.data.goToCheckout = function() {
+    if ($scope.data.totalCartQty < 1 || $scope.data.totalCartQty === undefined) {
+      alert('no items in cart');
+    } else {
+      $state.transitionTo('checkoutMain');
+    }
   }
 
 }])

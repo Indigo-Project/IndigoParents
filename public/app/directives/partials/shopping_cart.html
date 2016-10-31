@@ -8,24 +8,24 @@
     </div>
     <div class="one-item" ng-repeat="product in data.cart">
       <div class="item-left">
-        <img class="item-img" ng-src="{{product['826f6d0ae11323676ad968c82c15fa5b'].images[0].url.https}}">
-        <h3 class="item-title">{{product['826f6d0ae11323676ad968c82c15fa5b'].title}}</h3>
+        <img class="item-img" ng-src="{{product[data.cartKey].images[0].url.https}}">
+        <h3 class="item-title">{{product[data.cartKey].title}}</h3>
       </div>
       <div class="item-right">
         <form class="form-group" name="updateCart" ng-submit="data.updateCartQuantity(form.updateQuantity)">
-          <input type="number" name="quantity" class="form-control update-quantity" ng-model="form.updateQuantity" ng-init="form.updateQuantity = product['826f6d0ae11323676ad968c82c15fa5b'].quantity" required>
+          <input type="number" name="quantity" class="form-control update-quantity" ng-model="form.updateQuantity" ng-init="form.updateQuantity = product[data.cartKey].quantity" required>
           <input type="submit" class="form-control update-cart" value="Update Cart">
         </form>
-        <h4>{{ product['826f6d0ae11323676ad968c82c15fa5b'].price | currency }}</h4>
+        <h4>{{ product[data.cartKey].price | currency }}</h4>
       </div>
     </div>
     <div class="cart-totals">
       <h4 class="cart-subtotal-title">subtotal: </h4>
-      <h4 class="cart-subtotal-price">{{data.cart[0]['826f6d0ae11323676ad968c82c15fa5b'].quantity * 25 | currency }}</h4>
+      <h4 class="cart-subtotal-price">{{data.cart[0][data.cartKey].quantity * 25 | currency }}</h4>
     </div>
     <div class="cart-ctas">
       <button class="empty-cart-cta form-control" ng-click="data.emptyCart()">Empty Cart</button>
-      <button class="checkout-cta form-control"><a ui-sref="checkoutMain">Checkout</a></button>
+      <button class="checkout-cta form-control" ng-click="data.goToCheckout()"><a>Checkout</a></button>
     </div>
   </section>
   <section ng-show="!data.totalCartQty">
