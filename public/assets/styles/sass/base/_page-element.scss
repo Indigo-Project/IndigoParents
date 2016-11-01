@@ -538,6 +538,9 @@ h4.unassigned-passwords {
 
 div.load-csv-cta {
   margin-top: 25px;
+}
+
+form.load-csv {
   h4 {
     margin-bottom: 5px;
   }
@@ -546,8 +549,13 @@ div.load-csv-cta {
     background-color: rgb(196, 214, 255);
     border: 1px solid black;
     box-shadow: -1px 1px 1px 0px black;
+    margin-bottom: 10px;
+  }
+  button {
+    width: 200px;
   }
 }
+
 
 // SCHOOL SITE REDIRECT SEQUENCE
 h2.redirect-text {

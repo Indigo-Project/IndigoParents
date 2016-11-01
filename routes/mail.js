@@ -52,7 +52,7 @@ router.post('/send', function(req, res, next) {
       content: [
         {
           type: 'text/html',
-          value: req.body.data.first_name + ', <a href=\"https://www.ttisurvey.com///' + linkId + '\">Click Here<\/a> to access your Indigo Assessment.',
+          value: req.body.data.first_name + ', Here is your assessment. <a href=\"https://www.ttisurvey.com/' + linkId + '\">Click Here<\/a> and enter the following password: ' + req.body.data.password,
         },
       ],
     },

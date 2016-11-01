@@ -1,14 +1,15 @@
-app.controller('Admin_Controller', ['$scope', '$http', '$state', 'school_link_conv', function($scope, $http, $state, school_link_conv) {
+app.controller('Admin_Controller', ['$scope', '$http', '$state', 'mLabs', 'school_link_conv', function($scope, $http, $state, mLabs, school_link_conv) {
 
   $scope.view = {};
   $scope.data = {};
 
   $scope.view.selectedFunction = $state.current.name
   $scope.view.selectedSchool = "default";
+  $scope.data.pwObj = undefined;
+  $scope.data.button = false;
 
   // admin login from /admin
   $scope.data.submitPassword = function(password) {
-    console.log(password);
     $http({
       method: 'post',
       url: '/admin-s/login',
@@ -36,6 +37,11 @@ app.controller('Admin_Controller', ['$scope', '$http', '$state', 'school_link_co
     }
   }
 
+  $scope.view.showButton = function() {
+    $scope.data.button = true;
+    $scope.$apply();
+  }
+
   $scope.data.generateLink = function() {
     if ($scope.view.selectedSchool !== "default") {
       $scope.view.schoolLink = 'localhost:3005/school-links/' + $scope.view.selectedSchool;
@@ -58,9 +64,18 @@ app.controller('Admin_Controller', ['$scope', '$http', '$state', 'school_link_co
   $scope.data.loadPwObj = function() {
     console.log('loaded');
   }
-  
+
   $scope.data.addPasswords = function() {
-    console.log();
+    console.log(1);
+    if($scope.data.pwObj) {
+      console.log(2);
+      mLabs.loadNewPasswords($scope.view.selectedSchool, $scope.data.pwObj)
+      .then(function(data) {
+        $scope.data.pwAddedCount = data.count;
+      })
+    } else {
+      alert('no file uploaded')
+    }
   }
 
 }])

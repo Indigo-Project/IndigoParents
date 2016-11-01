@@ -6,6 +6,7 @@ var moltin = require('moltin')({
   publicId: process.env.MOLTIN_CLIENT_ID,
   secretKey: process.env.MOLTIN_SECRET
 });
+var csv = require('csv');
 var router = express.Router();
 
 // GET local API
@@ -87,32 +88,67 @@ router.post('/checkoutinfo', function(req, res, next) {
 })
 
 // ** TEMP : ACCESS PASSWORDS THROUGH MLABS DB **
+router.post('/:link/add-passwords', function(req, res, next) {
 
-router.get('/:link/passwords', function(req, res, next) {
-  mongo.mongoDBConnect(mongo.indigoTestURI).
+  mongo.mongoDBConnect(mongo.indigoParentsURI).
   then(function(data) {
-    mongo.getAllPasswordsByLink(data.db, req.params.link)
-    .then(function(linkPasswords) {
-      res.send({ link_id: req.params.link, passwords: linkPasswords });
+    var db = data.db
+    mongo.getAllPasswordsByLink(db, req.params.link)
+    .then(function(data) {
+      console.log("asdfasdf", data);
+      csv.parse(req.body.csv, {columns: true}, function(err, output) {
+        var count = 0;
+        for (var i = 0; i < output.length; i++) {
+          console.log(i + " -------");
+          console.log(output[i]);
+          var outputPassword = output[i].Password.substring(10);
+          var addToDBObj = {};
+          var addBool = true;
+          if(output[i]['First Name'] === '' && output[i]['Last Name'] === '' && output[i][' E-mail'] === '') {
+            if (data.length) {
+              for (var j = 0; j < data.length; j++) {
+                if (data[j].password === outputPassword) {
+                  var addBool = false;
+                  break;
+                }
+              }
+              if(addBool === true) {
+                addToDBObj.password = outputPassword;
+                addToDBObj.link = req.body.schoolCode;
+                addToDBObj.assigned = false;
+                mongo.addPassword(db, req.body.schoolCode, addToDBObj)
+                count ++;
+              }
+            } else {
+              addToDBObj.password = outputPassword;
+              addToDBObj.link = req.body.schoolCode;
+              addToDBObj.assigned = false;
+              mongo.addPassword(db, req.body.schoolCode, addToDBObj)
+              count ++;
+            }
+          }
+        }
+        res.send({ count: count });
+      })
     })
   })
 })
 
 // Retrieve fresh unassigned password by link, assign to user, and mark as assigned
-router.get('/:link/passwords/assign-new', function(req, res, next) {
-  mongo.mongoDBConnect(mongo.indigoTestURI)
+router.get('/:link/assign-new-password', function(req, res, next) {
+  console.log(req.params.link);
+  mongo.mongoDBConnect(mongo.indigoParentsURI)
   .then(function(data) {
     mongo.getAllPasswordsByLink(data.db, req.params.link)
-    .then(function(linkPasswords) {
-      console.log('resondentPasswords', linkPasswords);
+    .then(function(passwords) {
       var passwordToAssign = "";
       var indexOfPasswordToAssign = "";
       var unassignedPasswordExists = false;
-      for (var i = 0; i < linkPasswords.length; i++) {
-        if (linkPasswords[i].assigned === false) {
+      for (var i = 0; i < passwords.length; i++) {
+        if (passwords[i].assigned === false) {
           console.log('false');
           unassignedPasswordExists = true;
-          passwordToAssign = linkPasswords[i].password;
+          passwordToAssign = passwords[i].password;
           indexOfPasswordToAssign = i;
           break;
         }
@@ -181,9 +217,10 @@ router.post('/create-respondent', function(req, res, next) {
     if (err) {
       console.log("--- POST REQUEST ERROR ---", err);
     } else {
-      console.log(httpResponse.headers.location);
+      console.log(httpResponse.headers.status);
       console.log('response body', body);
-      res.send(body);
+      var returnObj = { body: body, status: httpResponse.headers.status };
+      res.send(returnObj);
     }
   })
 })

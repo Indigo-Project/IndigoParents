@@ -13,9 +13,10 @@ app.factory('TTI_API', ['$http', function($http) {
     return new Promise(function(resolve,reject) {
       $http({
         method: "POST",
-        url: "api/create-respondent",
+        url: "/api/create-respondent",
         data: { school: school, data: data }
       }).then(function(data) {
+        console.log(data);
         if (data) {
           resolve(data)
         } else {
@@ -35,6 +36,7 @@ app.factory('SG', ['$http', '$location', '$timeout', function($http, $location, 
   service.successfulPurchaseEmail = function(data, schoolCode) {
     return new Promise(function(resolve, reject) {
       console.log(data);
+      console.log(schoolCode);
       $http({
         method: "POST",
         url: "/mail/send",
@@ -95,11 +97,41 @@ app.factory('Moltin_API', ['$http', function($http){
 // Access & Manipulate mLabs DB
 app.factory("mLabs", ['$http', function($http) {
   return {
-    addPasswords: function(schoolcode, pwObj) {
+    adminAddPasswords: function(schoolcode, pwObj) {
       $http({
         method: "POST",
         url: "/admin-s/add-passwords/" + schoolCode,
         data: { passwords: pwObj }
+      })
+    },
+    loadNewPasswords: function(schoolCode, csv) {
+      console.log(csv);
+      return new Promise(function(resolve, reject) {
+        $http({
+          method: "POST",
+          url: "/api/" + schoolCode + "/add-passwords",
+          data: { csv: csv , schoolCode: schoolCode}
+        }).then(function(data) {
+          if (data) {
+            resolve(data);
+          } else {
+            console.log('error');
+          }
+        })
+      })
+    },
+    assignNewPassword: function(schoolCode) {
+      return new Promise(function(resolve, reject) {
+        $http({
+          method: "GET",
+          url: "/api/" + schoolCode + "/assign-new-password",
+        }).then(function(data) {
+          if (data) {
+            resolve(data);
+          } else {
+            console.log('error');
+          }
+        })
       })
     }
   }

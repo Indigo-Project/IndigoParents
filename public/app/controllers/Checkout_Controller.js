@@ -1,4 +1,4 @@
-app.controller('Checkout_Controller', ['$scope', '$state', '$timeout', 'localStorageService', 'Moltin_API', 'TTI_API', 'SG', function($scope, $state, $timeout, localStorageService, Moltin_API, TTI_API, SG) {
+app.controller('Checkout_Controller', ['$scope', '$state', '$timeout', 'localStorageService', 'mLabs', 'Moltin_API', 'TTI_API', 'SG', function($scope, $state, $timeout, localStorageService, mLabs, Moltin_API, TTI_API, SG) {
   $scope.view = {};
   $scope.data = {};
   $scope.form = {};
@@ -8,17 +8,17 @@ app.controller('Checkout_Controller', ['$scope', '$state', '$timeout', 'localSto
   $scope.data.cart = $scope.data.lscart[0][cartKey];
   $scope.data.purchaseSubmission = function() {
     $scope.view.processingPayment = "processing";
-    console.log($scope.form);
+    // console.log($scope.form);
     Moltin_API.getENV()
     .then(function(env) {
-      console.log(env);
+      // console.log(env);
       var moltin = new Moltin({publicId: env.data.MOLTIN_CLIENT_ID});
-      console.log(moltin);
+      // console.log(moltin);
       moltin.Authenticate(function() {
         var cart = moltin.Cart.Checkout();
-        console.log(cart);
+        // console.log(cart);
         var cartContents = moltin.Cart.Contents();
-        console.log(cartContents);
+        // console.log(cartContents);
         moltin.Cart.Complete({
           customer: {
             first_name: $scope.form.firstName,
@@ -38,8 +38,8 @@ app.controller('Checkout_Controller', ['$scope', '$state', '$timeout', 'localSto
             phone: "6109551011"
           }
         }, function(order) {
-          console.log(order);
-          console.log(order.id);
+          // console.log(order);
+          // console.log(order.id);
           moltin.Checkout.Payment('purchase', order.id, {
             data: {
               first_name: $scope.form.billingFirstName,
@@ -50,13 +50,13 @@ app.controller('Checkout_Controller', ['$scope', '$state', '$timeout', 'localSto
               cvv: $scope.form.CVV
             }
           }, function(payment) {
-            console.log(payment);
-            console.log(payment.message);
+            // console.log(payment);
+            // console.log(payment.message);
             if (payment.message === "Payment completed successfully") {
               $scope.view.processingPayment = "success";
               $scope.$apply();
               var schoolCode = localStorageService.get('schoolInstance');
-              console.log(schoolCode);
+              // console.log(schoolCode);
               var respondentData = {
                 first_name: $scope.form.firstName,
                 last_name: $scope.form.lastName,
@@ -65,18 +65,37 @@ app.controller('Checkout_Controller', ['$scope', '$state', '$timeout', 'localSto
                 company: $scope.form.company,
                 position_job: $scope.form.position_job
               }
-              console.log(respondentData);
-              TTI_API.createRespondent(schoolCode, respondentData)
+
+              // ** Create Respondent by Directly Accessing TTI API (Secure Link)
+
+              mLabs.assignNewPassword(schoolCode)
               .then(function(data) {
-                SG.successfulPurchaseEmail(data.data, schoolCode);
+                console.log(data);
+                respondentData.password = data.data.password;
+                SG.successfulPurchaseEmail(respondentData, schoolCode);
               }).catch(function(error) {
-                
-                console.log(error);
+
               })
+
+              // ** Create Respondent by Directly Accessing TTI API (Open Link)
+
+              // console.log(respondentData);
+              // TTI_API.createRespondent(schoolCode, respondentData)
+              // .then(function(data) {
+              //   console.log('success..');
+              //   if (data.data.status === "201 Created") {
+              //     SG.successfulPurchaseEmail(data.data.body, schoolCode);
+              //   } else {
+              //     mLabs.getUnassignedPasswords(schoolCode);
+              //   }
+              // }).catch(function(error) {
+              //   console.log(error);
+              // })
             }
           }, function(error1, error2) {
             console.log(error1);
             console.log(error2);
+            alert("There was an error - please re-enter your payment information and try again.")
           });
         }, function(error1, error2) {
           console.log(error1);
