@@ -17,7 +17,7 @@ router.post('/login', function(req, res, next) {
   }
 })
 
-router.post('/add-uapw', function(req, res, next) {
+router.post('/add-passwords', function(req, res, next) {
 
 })
 

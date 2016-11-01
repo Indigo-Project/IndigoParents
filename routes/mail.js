@@ -51,8 +51,8 @@ router.post('/send', function(req, res, next) {
       },
       content: [
         {
-          type: 'text/plain',
-          value: req.body.data.first_name + ', Here is your link: https://www.ttisurvey.com/' + linkId + ', and password: ' + req.body.data.passwd + ' . Click on the link and enter your password to begin the Indigo Assessment.',
+          type: 'text/html',
+          value: req.body.data.first_name + ', <a href=\"https://www.ttisurvey.com///' + linkId + '\">Click Here<\/a> to access your Indigo Assessment.',
         },
       ],
     },

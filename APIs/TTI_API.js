@@ -9,6 +9,14 @@ var linkLocations = {
       id: "308149BWF"
     }
   },
+  test2: {
+    auth: "c2hlcmlzbWl0aDpJbmRpZ29GciMj",
+    accountID: "SHERISMITH",
+    mainLink: {
+      name: "Indigo Parents Test 2",
+      id: "312384FTL"
+    }
+  },
   caprock: {
     auth: "Q0FQUk9DS0FDQURFTVk6MTIzNDU2Nzg=",
     accountID: "CAPROCKACADEMY",

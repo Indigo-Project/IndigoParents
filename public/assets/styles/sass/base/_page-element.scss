@@ -531,6 +531,24 @@ section.generate-link {
   }
 }
 
+h4.unassigned-passwords {
+  margin-top: 20px;
+  color: green;
+}
+
+div.load-csv-cta {
+  margin-top: 25px;
+  h4 {
+    margin-bottom: 5px;
+  }
+  input {
+    width: 300px;
+    background-color: rgb(196, 214, 255);
+    border: 1px solid black;
+    box-shadow: -1px 1px 1px 0px black;
+  }
+}
+
 // SCHOOL SITE REDIRECT SEQUENCE
 h2.redirect-text {
   margin: 30px 0px 0px 438px;

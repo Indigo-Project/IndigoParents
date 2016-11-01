@@ -71,7 +71,23 @@ app.directive('addPasswords', function() {
   return {
     restrict: 'E',
     templateUrl: 'app/directives/partials/add_passwords.html',
-    controller: "Admin_Controller"
+    controller: "Admin_Controller",
+    link: function (scope, element, attributes) {
+      element.bind("change", function (changeEvent) {
+        var reader = new FileReader();
+        reader.onload = function (loadEvent) {
+          console.log(loadEvent);
+          console.log(loadEvent.target.result);
+          var csv_file = atob(loadEvent.target.result.substring(21));
+          console.log(csv_file);
+          scope.$apply(function () {
+            scope.fileread = csv_file;
+          });
+        }
+        console.log(changeEvent);
+        reader.readAsDataURL(changeEvent.target.files[0]);
+      });
+    },
   }
 })
 

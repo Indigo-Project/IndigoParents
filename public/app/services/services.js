@@ -29,8 +29,8 @@ app.factory('TTI_API', ['$http', function($http) {
   return service;
 }])
 
-// Mailgun Service - connect to server-side Moltin API
-app.factory('Mailgun', ['$http', '$location', '$timeout', function($http, $location, $timeout) {
+// Sendgrid Service - connect to server-side SG API
+app.factory('SG', ['$http', '$location', '$timeout', function($http, $location, $timeout) {
   var service = {};
   service.successfulPurchaseEmail = function(data, schoolCode) {
     return new Promise(function(resolve, reject) {
@@ -92,6 +92,18 @@ app.factory('Moltin_API', ['$http', function($http){
   return service;
 }])
 
+// Access & Manipulate mLabs DB
+app.factory("mLabs", ['$http', function($http) {
+  return {
+    addPasswords: function(schoolcode, pwObj) {
+      $http({
+        method: "POST",
+        url: "/admin-s/add-passwords/" + schoolCode,
+        data: { passwords: pwObj }
+      })
+    }
+  }
+}])
 
 // Service for converting school codes to full names and vice versa
 app.factory("school_link_conv", ['$http', '$stateParams', function($http, $stateParams) {

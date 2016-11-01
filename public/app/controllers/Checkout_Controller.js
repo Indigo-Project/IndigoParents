@@ -1,4 +1,4 @@
-app.controller('Checkout_Controller', ['$scope', '$state', '$timeout', 'localStorageService', 'Moltin_API', 'TTI_API', 'Mailgun', function($scope, $state, $timeout, localStorageService, Moltin_API, TTI_API, Mailgun) {
+app.controller('Checkout_Controller', ['$scope', '$state', '$timeout', 'localStorageService', 'Moltin_API', 'TTI_API', 'SG', function($scope, $state, $timeout, localStorageService, Moltin_API, TTI_API, SG) {
   $scope.view = {};
   $scope.data = {};
   $scope.form = {};
@@ -68,8 +68,9 @@ app.controller('Checkout_Controller', ['$scope', '$state', '$timeout', 'localSto
               console.log(respondentData);
               TTI_API.createRespondent(schoolCode, respondentData)
               .then(function(data) {
-                Mailgun.successfulPurchaseEmail(data.data, schoolCode);
+                SG.successfulPurchaseEmail(data.data, schoolCode);
               }).catch(function(error) {
+                
                 console.log(error);
               })
             }

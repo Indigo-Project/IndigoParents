@@ -408,6 +408,20 @@ section.generate-link {
   section.generate-link a {
     margin-left: 5px; }
 
+h4.unassigned-passwords {
+  margin-top: 20px;
+  color: green; }
+
+div.load-csv-cta {
+  margin-top: 25px; }
+  div.load-csv-cta h4 {
+    margin-bottom: 5px; }
+  div.load-csv-cta input {
+    width: 300px;
+    background-color: #c4d6ff;
+    border: 1px solid black;
+    box-shadow: -1px 1px 1px 0px black; }
+
 h2.redirect-text {
   margin: 30px 0px 0px 438px;
   color: #828282; }

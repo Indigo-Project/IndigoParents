@@ -4,7 +4,7 @@ var router = express.Router();
 
 router.get('/:name', function(req, res, next) {
   var param = req.params.name;
-  if (param === "test") {
+  if (param === "test" || param === "test2" || param === "caprock") {
     res.end(req.params.name);
   } else {
     res.redirect("/");

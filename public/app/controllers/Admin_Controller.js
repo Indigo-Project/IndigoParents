@@ -55,4 +55,12 @@ app.controller('Admin_Controller', ['$scope', '$http', '$state', 'school_link_co
     })
   }
 
+  $scope.data.loadPwObj = function() {
+    console.log('loaded');
+  }
+  
+  $scope.data.addPasswords = function() {
+    console.log();
+  }
+
 }])
