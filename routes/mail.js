@@ -1,11 +1,12 @@
 var express = require('express');
 var request = require('request');
-var Mailgun = require('mailgun').Mailgun;
+// var Mailgun = require('mailgun').Mailgun;
+var sg = require('sendgrid')(process.env.SENDGRID_API_KEY);
 var mongo = require('../database/mongo-db');
 var TTI_API = require('../APIs/TTI_API');
 var router = express.Router();
 
-var mg = new Mailgun(process.env.MAILGUN_API_KEY);
+// var mg = new Mailgun(process.env.MAILGUN_API_KEY);
 
 // sendText(sender, recipients, subject, text, [servername=''], [options={}], [callback(err)])
 
@@ -19,13 +20,55 @@ var mg = new Mailgun(process.env.MAILGUN_API_KEY);
 // options - Optional parameters. See Mailgun's API docs for details on these. At the time of writing, the only supported value is headers, which should be a hash of additional MIME headers you want to send.
 // callback - Callback to be fired when the email is done being sent. This should take a single parameter, err, that will be set to the status code of the API HTTP response code if the email failed to send; on success, err will be undefined.
 
+// router.post('/send', function(req, res, next) {
+//   console.log('post arrived at /mail');
+//   var linkId = TTI_API.linkLocations[req.body.schoolCode].mainLink.id
+//   mg.sendText('IndigoParents@indigoproject.org', req.body.data.email, req.body.data.first_name + ', Access Your Indigo Me Assessment', req.body.data.first_name + ', Here is your link: https://www.ttisurvey.com/' + linkId + ', and password: ' + req.body.data.passwd + ' . Click on the link and enter your password to begin the Indigo Assessment.', {'X-Campaign-Id': 'indigoParents'}
+//   , function(err) {
+//     err && console.log(err)
+//   });
+//   res.end();
+// })
+
 router.post('/send', function(req, res, next) {
-  console.log('post arrived at /mail');
   var linkId = TTI_API.linkLocations[req.body.schoolCode].mainLink.id
-  mg.sendText('IndigoParents@indigoproject.org', req.body.data.email, req.body.data.first_name + ', Access Your Indigo Me Assessment', req.body.data.first_name + ', Here is your link: https://www.ttisurvey.com/' + linkId + ', and password: ' + req.body.data.passwd + ' . Click on the link and enter your password to begin the Indigo Assessment.', {'X-Campaign-Id': 'indigoParents'}
-  , function(err) {
-    err && console.log(err)
+  var request = sg.emptyRequest({
+    method: 'POST',
+    path: '/v3/mail/send',
+    body: {
+      personalizations: [
+        {
+          to: [
+            {
+              email: req.body.data.email,
+            },
+          ],
+          subject: req.body.data.first_name + ", Access Your Indigo Me Assessment",
+        },
+      ],
+      from: {
+        email: 'IndigoParents@indigoproject.org',
+      },
+      content: [
+        {
+          type: 'text/plain',
+          value: req.body.data.first_name + ', Here is your link: https://www.ttisurvey.com/' + linkId + ', and password: ' + req.body.data.passwd + ' . Click on the link and enter your password to begin the Indigo Assessment.',
+        },
+      ],
+    },
   });
+  sg.API(request, function(error, response) {
+  if (error) {
+    console.log('Error response received');
+  }
+  console.log(response.statusCode);
+  console.log(response.body);
+  console.log(response.headers);
+  });
+  // mg.sendText('IndigoParents@indigoproject.org', req.body.data.email, req.body.data.first_name + ', Access Your Indigo Me Assessment', req.body.data.first_name + ', Here is your link: https://www.ttisurvey.com/' + linkId + ', and password: ' + req.body.data.passwd + ' . Click on the link and enter your password to begin the Indigo Assessment.', {'X-Campaign-Id': 'indigoParents'}
+  // , function(err) {
+  //   err && console.log(err)
+  // });
   res.end();
 })
 
