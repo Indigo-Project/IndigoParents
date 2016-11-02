@@ -4,11 +4,23 @@ app.controller('Checkout_Controller', ['$scope', '$state', '$timeout', '$window'
   $scope.form = {};
   $scope.view.paymentStatus = "";
 
+  // $scope.data.timeoutStatus = localStorageService.get('timeoutStatus') || "off";
+  // if ($scope.data.timeoutStatus === "off") {
+  //   var timerOff;
+  // } else {
+  //   var timerOn;
+  // }
+
   $scope.view.checkoutAccess = localStorageService.get('checkoutStatus') || null;
   console.log($scope.view.checkoutAccess);
 
   if($scope.view.checkoutAccess === "post-checkout-off") {
+    localStorageService.set('invQty', 0);
     $state.transitionTo("productsPage");
+  } else if ($scope.view.checkoutAccess === "post-checkout-mid" && $state.current.name === 'checkoutMain') {
+    localStorageService.set('invQty', 0);
+    $state.transitionTo("productsPage");
+    $timeout.cancel(timerOn);
   }
 
   $scope.view.leaveSite = function() {
@@ -222,16 +234,16 @@ app.controller('Checkout_Controller', ['$scope', '$state', '$timeout', '$window'
 
   $scope.data.resetOrder = function() {
     console.log('reset order');
-    $scope.data.emptyCart();
+    // $scope.data.emptyCart();
     $state.transitionTo('productsPage');
   }
 
   $scope.data.redirectHome = function() {
     var checkoutStatus = localStorageService.get('checkoutStatus');
     if (checkoutStatus === "post-checkout-off") {
-      $transitionTo('productsPage');
+      $state.transitionTo('productsPage');
     } else {
-      $timeout(function() {
+      timer = $timeout(function() {
         $scope.view.leaveSite();
       }, 5000)
     }

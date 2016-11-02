@@ -10,6 +10,14 @@ app.controller('Cart_Controller', ['$scope', '$state', '$http', 'localStorageSer
   // console.log(localStorageService.get('cart'));
   // console.log(Object.keys(localStorageService.get('cart')['0']));
   // var cartKey = Object.keys(localStorageService.get('cart')['0'])[0] || null;
+  var invQty = localStorageService.get('invQty') || 0;
+  console.log(invQty);
+
+  console.log(localStorageService.get('checkoutStatus'));
+  if (localStorageService.get('checkoutStatus') === 'post-checkout-off') {
+    console.log('TRUE');
+  }
+
 
   // console.log(localStorageService.get('cart'));
   if (localStorageService.get('cart') !== null) {
@@ -70,45 +78,53 @@ app.controller('Cart_Controller', ['$scope', '$state', '$http', 'localStorageSer
   $scope.data.addToCart = function(productSlug) {
 
     $scope.data.purchaseCta = "Loading..."
-    localStorageService.set('checkoutStatus', 'in-progress')
+    localStorageService.set('checkoutStatus', 'in-progress');
+    var invQty = localStorageService.get('invQty');
+    console.log(invQty);
 
-    Moltin_API.getENV()
-    .then(function(env) {
-      var moltin = new Moltin({publicId: env.data.MOLTIN_CLIENT_ID});
-      // console.log(moltin);
-      moltin.Authenticate(function() {
-        Moltin_API.getIndigoInventory()
-        .then(function(data){
-          var item = moltin.Cart.Insert(data.product_id, 1, null)
-          var checkoutObj = moltin.Cart.Checkout();
-          // console.log(checkoutObj);
-          var cart = moltin.Cart.Contents();
-          var cartContents = [];
-          cartContents.push(cart.contents);
-          localStorageService.set("cart", cartContents);
-          if (localStorageService.get('cart') !== null) {
-            var cartKey = Object.keys(localStorageService.get('cart')['0'])[0]
-          } else {
-            var cartKey = null;
-          }
-          if(cartKey === null) {
-            $scope.data.cart = [];
-            var iiCartItem = null;
-          } else {
-            $scope.data.cart = localStorageService.get('cart');
-            var iiCartItem = $scope.data.cart['0'][cartKey];
-          }
-          console.log(cartKey);
-          $scope.data.calcTotalCartQty();
-          $scope.$apply();
-          $state.transitionTo('checkoutMain');
-        }).catch(function(error) {
-          console.log(error);
+    if(invQty !== 1) {
+
+      Moltin_API.getENV()
+      .then(function(env) {
+        var moltin = new Moltin({publicId: env.data.MOLTIN_CLIENT_ID});
+        // console.log(moltin);
+        moltin.Authenticate(function() {
+          Moltin_API.getIndigoInventory()
+          .then(function(data){
+            var item = moltin.Cart.Insert(data.product_id, 1, null)
+            var checkoutObj = moltin.Cart.Checkout();
+            // console.log(checkoutObj);
+            var cart = moltin.Cart.Contents();
+            var cartContents = [];
+            cartContents.push(cart.contents);
+            localStorageService.set("cart", cartContents);
+            if (localStorageService.get('cart') !== null) {
+              var cartKey = Object.keys(localStorageService.get('cart')['0'])[0]
+            } else {
+              var cartKey = null;
+            }
+            if(cartKey === null) {
+              $scope.data.cart = [];
+              var iiCartItem = null;
+            } else {
+              $scope.data.cart = localStorageService.get('cart');
+              var iiCartItem = $scope.data.cart['0'][cartKey];
+            }
+            console.log(cartKey);
+            $scope.data.calcTotalCartQty();
+            $scope.$apply();
+            localStorageService.set('invQty', 1);
+            $state.transitionTo('checkoutMain');
+          }).catch(function(error) {
+            console.log(error);
+          })
         })
+      }).catch(function(error) {
+        console.log(error);
       })
-    }).catch(function(error) {
-      console.log(error);
-    })
+    } else if (invQty === 1) {
+      $state.transitionTo('checkoutMain');
+    }
   }
 
   // run when user clicks 'empty cart' in cart
