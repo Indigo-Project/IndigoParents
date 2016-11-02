@@ -11,11 +11,11 @@ app.controller('Cart_Controller', ['$scope', '$state', '$http', 'localStorageSer
   // console.log(Object.keys(localStorageService.get('cart')['0']));
   // var cartKey = Object.keys(localStorageService.get('cart')['0'])[0] || null;
   var invQty = localStorageService.get('invQty') || 0;
-  console.log(invQty);
+  // console.log(invQty);
 
-  console.log(localStorageService.get('checkoutStatus'));
+  // console.log(localStorageService.get('checkoutStatus'));
   if (localStorageService.get('checkoutStatus') === 'post-checkout-off') {
-    console.log('TRUE');
+    // console.log('TRUE');
   }
 
 

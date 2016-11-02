@@ -25,7 +25,7 @@ app.controller('Checkout_Controller', ['$scope', '$state', '$timeout', '$window'
 
   var cartKey = Object.keys(localStorageService.get('cart')['0'])[0];
   $scope.data.cart = $scope.data.lscart[0][cartKey];
-  console.log($scope.data.cart);
+  // console.log($scope.data.cart);
 
   if (localStorageService.get('cart') !== null) {
     var cartKey = Object.keys(localStorageService.get('cart')['0'])[0];
@@ -226,7 +226,7 @@ app.controller('Checkout_Controller', ['$scope', '$state', '$timeout', '$window'
   }
 
   $scope.data.resetOrder = function() {
-    console.log('reset order');
+    // console.log('reset order');
     // $scope.data.emptyCart();
     $state.transitionTo('productsPage');
   }
