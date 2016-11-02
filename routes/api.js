@@ -87,7 +87,7 @@ router.post('/checkoutinfo', function(req, res, next) {
   })
 })
 
-// ** TEMP : ACCESS PASSWORDS THROUGH MLABS DB **
+// ** ADD PASSWORDS TO MLABS DB BY SCHOOLCODE **
 router.post('/:link/add-passwords', function(req, res, next) {
 
   mongo.mongoDBConnect(mongo.indigoParentsURI).
@@ -95,12 +95,9 @@ router.post('/:link/add-passwords', function(req, res, next) {
     var db = data.db
     mongo.getAllPasswordsByLink(db, req.params.link)
     .then(function(data) {
-      console.log("asdfasdf", data);
       csv.parse(req.body.csv, {columns: true}, function(err, output) {
         var count = 0;
         for (var i = 0; i < output.length; i++) {
-          console.log(i + " -------");
-          console.log(output[i]);
           var outputPassword = output[i].Password.substring(10);
           var addToDBObj = {};
           var addBool = true;
@@ -176,24 +173,35 @@ router.get('/:link/assign-new-password', function(req, res, next) {
 // *** TTI ***
 
 // GET TTI LINK DATA BASED ON ADMIN PORTAL SCHOOL SELECTION
-router.post('/showLink', function(req, res, next) {
-  var selectedSchool = req.body.selectedSchool;
-  var ssRef = TTI_API.linkLocations[selectedSchool];
-  var options = {
-    url: TTI_API.APIs.showLink.generateEndpoint(ssRef.accountID, ssRef.mainLink.id),
-    headers: {
-      'Authorization': 'Basic c2hlcmlzbWl0aDpJbmRpZ29GciMj',
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-    }
-  };
-  request(options, function(err, response, body) {
-    if (err) {
-      console.log(err);
-      res.end();
-    } else {
-      res.end(body);
-    }
+router.get('/:link/showLink', function(req, res, next) {
+  var selectedSchool = req.params.link;
+
+  mongo.mongoDBConnect(mongo.indigoParentsURI).
+  then(function(data) {
+    var db = data.db
+    mongo.getAllPasswordsByLink(db, req.params.link)
+    .then(function(data) {
+      res.send(data);
+
+  // ** ACCESS VIA TTI API
+  // var ssRef = TTI_API.linkLocations[selectedSchool];
+  // var options = {
+  //   url: TTI_API.APIs.showLink.generateEndpoint(ssRef.accountID, ssRef.mainLink.id),
+  //   headers: {
+  //     'Authorization': 'Basic c2hlcmlzbWl0aDpJbmRpZ29GciMj',
+  //     'Content-Type': 'application/json',
+  //     'Accept': 'application/json',
+  //   }
+  // };
+  // request(options, function(err, response, body) {
+  //   if (err) {
+  //     console.log(err);
+  //     res.end();
+  //   } else {
+  //     res.end(body);
+  //   }
+  // })
+    })
   })
 })
 

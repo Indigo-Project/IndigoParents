@@ -5,6 +5,8 @@ app.controller('Admin_Controller', ['$scope', '$http', '$state', 'mLabs', 'schoo
 
   $scope.view.selectedFunction = $state.current.name
   $scope.view.selectedSchool = "default";
+  $scope.view.pWQtyLoaded = false;
+  $scope.view.loadFinished = false;
   $scope.data.pwObj = undefined;
   $scope.data.button = false;
 
@@ -49,15 +51,14 @@ app.controller('Admin_Controller', ['$scope', '$http', '$state', 'mLabs', 'schoo
   }
 
   $scope.data.showLinkInfo = function(selectedSchool) {
+    $scope.view.pWQtyLoaded = false;
+    $scope.view.loadFinished = false;
     $http({
-      method: 'post',
-      url: '/api/showLink',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      data: { selectedSchool: selectedSchool }
+      method: 'get',
+      url: '/api/' + selectedSchool + '/showLink',
     }).then(function(data) {
-      console.log(data);
+      $scope.data.mlPwQty = data.data.length;
+      $scope.view.pWQtyLoaded = true;
     })
   }
 
@@ -66,12 +67,16 @@ app.controller('Admin_Controller', ['$scope', '$http', '$state', 'mLabs', 'schoo
   }
 
   $scope.data.addPasswords = function() {
-    console.log(1);
+    $scope.view.loadFinished = false;
     if($scope.data.pwObj) {
-      console.log(2);
       mLabs.loadNewPasswords($scope.view.selectedSchool, $scope.data.pwObj)
       .then(function(data) {
-        $scope.data.pwAddedCount = data.count;
+        console.log(data);
+        console.log(data.data.count);
+        $scope.data.showLinkInfo($scope.view.selectedSchool)
+        $scope.data.pwAddedCount = data.data.count;
+        $scope.view.loadFinished = true;
+        $scope.$apply();
       })
     } else {
       alert('no file uploaded')
