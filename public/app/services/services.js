@@ -146,7 +146,7 @@ app.factory("school_link_conv", ['$http', '$stateParams', function($http, $state
           method: "GET",
           url: "/school-links-s/get-full-name/" + code
         }).then(function(data) {
-          console.log(data);
+          // console.log(data);
           if (data) {
             resolve(data);
           } else {

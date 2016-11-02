@@ -18,7 +18,7 @@ app.controller('Cart_Controller', ['$scope', '$state', '$http', 'localStorageSer
     var cartKey = null;
     $scope.data.cartKey = null;
   }
-  console.log($scope.data.cartKey);
+  // console.log($scope.data.cartKey);
 
   // if no cartKey, $scope.data.cart = null, otherwise = localStorage Cart Object
   if(cartKey === null) {
@@ -71,13 +71,13 @@ app.controller('Cart_Controller', ['$scope', '$state', '$http', 'localStorageSer
     Moltin_API.getENV()
     .then(function(env) {
       var moltin = new Moltin({publicId: env.data.MOLTIN_CLIENT_ID});
-      console.log(moltin);
+      // console.log(moltin);
       moltin.Authenticate(function() {
         Moltin_API.getIndigoInventory()
         .then(function(data){
           var item = moltin.Cart.Insert(data.product_id, $scope.form.orderQuantity, null)
           var checkoutObj = moltin.Cart.Checkout();
-          console.log(checkoutObj);
+          // console.log(checkoutObj);
           var cart = moltin.Cart.Contents();
           var cartContents = [];
           cartContents.push(cart.contents);
