@@ -139,7 +139,9 @@ div.one-product {
       div.one-product div.product-right div.product-heading h2.price {
         font-weight: 200; }
     div.one-product div.product-right div.product-details {
-      margin-bottom: 10.5vh; }
+      margin-bottom: 7vh; }
+      div.one-product div.product-right div.product-details p {
+        font-size: 14.5px; }
     div.one-product div.product-right div.cart-cta {
       width: 20vw;
       margin-left: 26vw; }

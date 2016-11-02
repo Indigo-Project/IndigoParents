@@ -2,6 +2,7 @@ var express = require('express');
 var request = require('request');
 // var Mailgun = require('mailgun').Mailgun;
 var sg = require('sendgrid')(process.env.SENDGRID_API_KEY);
+var school_link_conv = require("../APIs/school_link_conv");
 var mongo = require('../database/mongo-db');
 var TTI_API = require('../APIs/TTI_API');
 var router = express.Router();
@@ -31,6 +32,9 @@ var router = express.Router();
 // })
 
 router.post('/send', function(req, res, next) {
+  console.log(req.body.schoolCode);
+  var schoolName = school_link_conv[req.body.schoolCode].name;
+  console.log(schoolName);
   var linkId = TTI_API.linkLocations[req.body.schoolCode].mainLink.id
   var request = sg.emptyRequest({
     method: 'POST',
@@ -52,7 +56,8 @@ router.post('/send', function(req, res, next) {
       content: [
         {
           type: 'text/html',
-          value: req.body.data.first_name + ', Here is your assessment. <a href=\"https://www.ttisurvey.com/' + linkId + '\">Click Here<\/a> and enter the following password: ' + req.body.data.password,
+          value: 'Hello ' + schoolName + ' Parents!,<br><br>Thank you for purchasing the Indigo Inventory.  Indigo Parent Nights create an intentional time where parents and students can learn more about their differences, and how parents can help their kids succeed based on who they are.<br><br><strong>Instructions<\/strong><br><ol><li>Click <a href=\"https://www.ttisurvey.com/' + linkId + '\">Here<\/a> to start the Indigo Inventory. It will take approximately<br> 20 minutes to complete and it must be finished in one sitting.<\/li><li>The webpage will prompt you for a password. Please enter this password: ' + req.body.data.password + '<\/li><\/ol>We hope you enjoy learning more about yourself and your child\'s strengths!<br>- The Indigo Team<br><br><em>“Enlightening. Worth the time and money to help you understand yourself and your child.”<br>- High School Parent (Cincinnati, Ohio)</em><br><br><img style=\"width: 200px;\" src=\"http://p3insights.com/wp-content/uploads/2016/07/download-300x166.png\"> '
+          // req.body.data.first_name + ', Here is your assessment. <a href=\"https://www.ttisurvey.com/' + linkId + '\">Click Here<\/a> and enter the following password: ' + req.body.data.password,
         },
       ],
     },
