@@ -227,8 +227,13 @@ app.controller('Checkout_Controller', ['$scope', '$state', '$timeout', '$window'
   }
 
   $scope.data.redirectHome = function() {
-    $timeout(function() {
-      $scope.view.leaveSite();
-    }, 5000)
+    var checkoutStatus = localStorageService.get('checkoutStatus');
+    if (checkoutStatus === "post-checkout-off") {
+      $transitionTo('productsPage');
+    } else {
+      $timeout(function() {
+        $scope.view.leaveSite();
+      }, 5000)
+    }
   }
 }])
