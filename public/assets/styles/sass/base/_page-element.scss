@@ -48,7 +48,6 @@ span.cart-green {
   color: #7BBF4A;
 }
 
-
 // MAIN BODY SECTIONS
 main.page-body-wmast {
   display: flex;
@@ -164,7 +163,7 @@ div.one-product {
     display: flex;
     flex-direction: column;
     // justify-content: space-between;
-    padding: 0px 0px 0px 4vw;
+    padding: 0px 0px 0px 80px;
     div.product-heading {
       display: flex;
       justify-content: space-between;
@@ -354,7 +353,6 @@ button.cart-empty-cta {
   background-color: #7BBF4A;
   margin-top: 5vh;
 }
-
 
 // CHECKOUT PAGE
 
@@ -560,7 +558,6 @@ h5.qty-loaded {
   margin-top: 10px;
   color: green;
 }
-
 
 // SCHOOL SITE REDIRECT SEQUENCE
 h2.redirect-text {

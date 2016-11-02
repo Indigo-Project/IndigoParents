@@ -131,7 +131,7 @@ div.one-product {
   div.one-product div.product-right {
     display: flex;
     flex-direction: column;
-    padding: 0px 0px 0px 4vw; }
+    padding: 0px 0px 0px 80px; }
     div.one-product div.product-right div.product-heading {
       display: flex;
       justify-content: space-between;
