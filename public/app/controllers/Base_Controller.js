@@ -38,7 +38,7 @@ app.controller("Base_Controller", ['$scope', '$state', '$stateParams', '$timeout
     $scope.data.storeSSinLS()
     .then(function() {
       $timeout(function() {
-        $state.transitionTo('landingPage')
+        $state.transitionTo('productsPage')
       }, 1000);
     })
   }

@@ -75,7 +75,7 @@ app.controller('Cart_Controller', ['$scope', '$state', '$http', 'localStorageSer
       moltin.Authenticate(function() {
         Moltin_API.getIndigoInventory()
         .then(function(data){
-          var item = moltin.Cart.Insert(data.product_id, $scope.form.orderQuantity, null)
+          var item = moltin.Cart.Insert(data.product_id, 1, null)
           var checkoutObj = moltin.Cart.Checkout();
           // console.log(checkoutObj);
           var cart = moltin.Cart.Contents();
@@ -97,7 +97,7 @@ app.controller('Cart_Controller', ['$scope', '$state', '$http', 'localStorageSer
           console.log(cartKey);
           $scope.data.calcTotalCartQty();
           $scope.$apply();
-          $state.transitionTo('shoppingCart');
+          $state.transitionTo('checkoutMain');
         }).catch(function(error) {
           console.log(error);
         })

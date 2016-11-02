@@ -163,7 +163,7 @@ div.one-product {
     display: flex;
     flex-direction: column;
     // justify-content: space-between;
-    padding: 0px 0px 0px 80px;
+    padding: 0px 0px 0px 59px;
     div.product-heading {
       display: flex;
       justify-content: space-between;
@@ -180,7 +180,7 @@ div.one-product {
       margin-left: 26vw;
       form {
         display: flex;
-        justify-content: space-between;
+        justify-content: flex-end;
         width: 100%;
         label {
           font-size: 18px;
@@ -333,6 +333,17 @@ button.empty-cart-cta {
   color: white;
   background-color: #d94848;
 }
+
+button.empty-cart-cta-2 {
+  width: 80px;
+  border: none;
+  color: rgb(158, 158, 158);
+  background-color: white;
+  &:hover {
+    color: rgb(87, 144, 255)
+  }
+}
+
 
 button.checkout-cta {
   width: 150px;

@@ -36,12 +36,13 @@
             <input class="form-control sec-number" type="text" placeholder="CVC/CVV" ng-model="form.CVV"  pattern=".{3}" title="please enter 3 digit CVV security code in the following format: '123'" required>
           </div>
         </div>
-        <a ui-sref="shoppingCart"><< back</a>
+        <!-- <button class="empty-cart-cta-2" ng-click="data.resetOrder()">reset order</button> -->
       </div>
       <div class="checkout-right">
         <div class="order-summary">
           <h3 class="checkout-subtitle">Order Summary</h3>
           <h4>Items</h4>
+          <!-- <p>{{data.cart}}</p> -->
           <p>{{data.cart.title}} x {{data.cart.quantity}}</p>
           <h4>Subtotal</h4>
           <p>{{data.cart.price * data.cart.quantity | currency}}</p>
@@ -50,6 +51,9 @@
         <h4 class="payment-process" ng-show="view.processingPayment === 'processing'">Processing Payment...</h4>
         <h4 class="payment-process" ng-show="view.processingPayment === 'success'">Successful Transaction! Check your email..</h4>
       </div>
+    </form>
+    <form ng-submit="data.resetOrder()">
+      <button class="empty-cart-cta-2" type="submit">reset order</button>
     </form>
   </section>
 </main>

@@ -7,12 +7,12 @@ app.config(function($stateProvider, $urlRouterProvider, $locationProvider, local
   $urlRouterProvider.otherwise("/");
 
   $stateProvider
-    .state('landingPage', {
-      url: '/',
-      templateUrl: "templates/landing_page.html",
-    })
+    // .state('landingPage', {
+    //   url: '/',
+    //   templateUrl: "templates/landing_page.html",
+    // })
     .state('productsPage', {
-      url: '/products',
+      url: '/',
       templateUrl: "templates/products_page.html"
     })
     .state('shoppingCart', {

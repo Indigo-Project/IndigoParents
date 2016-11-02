@@ -131,7 +131,7 @@ div.one-product {
   div.one-product div.product-right {
     display: flex;
     flex-direction: column;
-    padding: 0px 0px 0px 80px; }
+    padding: 0px 0px 0px 59px; }
     div.one-product div.product-right div.product-heading {
       display: flex;
       justify-content: space-between;
@@ -145,7 +145,7 @@ div.one-product {
       margin-left: 26vw; }
       div.one-product div.product-right div.cart-cta form {
         display: flex;
-        justify-content: space-between;
+        justify-content: flex-end;
         width: 100%; }
         div.one-product div.product-right div.cart-cta form label {
           font-size: 18px;
@@ -264,6 +264,14 @@ button.empty-cart-cta {
   border: none;
   color: white;
   background-color: #d94848; }
+
+button.empty-cart-cta-2 {
+  width: 80px;
+  border: none;
+  color: #9e9e9e;
+  background-color: white; }
+  button.empty-cart-cta-2:hover {
+    color: #5790ff; }
 
 button.checkout-cta {
   width: 150px;
