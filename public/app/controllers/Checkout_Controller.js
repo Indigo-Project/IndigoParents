@@ -1,11 +1,105 @@
-app.controller('Checkout_Controller', ['$scope', '$state', '$timeout', 'localStorageService', 'mLabs', 'Moltin_API', 'TTI_API', 'SG', function($scope, $state, $timeout, localStorageService, mLabs, Moltin_API, TTI_API, SG) {
+app.controller('Checkout_Controller', ['$scope', '$state', '$timeout', '$window','localStorageService', 'mLabs', 'Moltin_API', 'TTI_API', 'SG', function($scope, $state, $timeout, $window, localStorageService, mLabs, Moltin_API, TTI_API, SG) {
   $scope.view = {};
   $scope.data = {};
   $scope.form = {};
   $scope.view.paymentStatus = "";
+
+  $scope.view.leaveSite = function() {
+    $window.location.href = "http://www.indigoproject.org/parent-night";
+  }
+
   $scope.data.lscart = localStorageService.get('cart') || [];
+
   var cartKey = Object.keys(localStorageService.get('cart')['0'])[0];
   $scope.data.cart = $scope.data.lscart[0][cartKey];
+
+  if (localStorageService.get('cart') !== null) {
+    var cartKey = Object.keys(localStorageService.get('cart')['0'])[0];
+    $scope.data.cartKey = Object.keys(localStorageService.get('cart')['0'])[0];
+  } else {
+    var cartKey = null;
+    $scope.data.cartKey = null;
+  }
+  // console.log($scope.data.cartKey);
+
+  // if no cartKey, $scope.data.cart = null, otherwise = localStorage Cart Object
+  // if(cartKey === null) {
+  //   $scope.data.cart = [];
+  //   var iiCartItem = null;
+  // } else {
+  //   $scope.data.cart = localStorageService.get('cart');
+  //   var iiCartItem = $scope.data.cart['0'][cartKey];
+  // }
+
+  // if iiCartItem totalCartQty = quantity of cart Item, otherwise = 0;
+  // if (iiCartItem) {
+  //   $scope.data.totalCartQty = iiCartItem.quantity
+  // } else {
+  //   $scope.data.totalCartQty = 0;
+  // }
+
+  $scope.view.cartEmpty = $scope.data.totalCartQty <= 0;
+
+  $scope.data.cartLoaded = false;
+
+  // update view.cartEmpty based on totalCart Qty
+  $scope.data.updateCartStatus = function() {
+    if ($scope.data.totalCartQty > 0) {
+      $scope.view.cartEmpty = false;
+    } else {
+      $scope.view.cartEmpty = true;
+    }
+  }
+
+  // $scope.data.calcTotalCartQty = function() {
+  //   if (cartKey === null || cartKey === undefined) {
+  //     $scope.data.totalCartQty = 0;
+  //   } else {
+  //     // console.log($scope.data.cart[0]);
+  //     // console.log($scope.data.cart['0']);
+  //     // console.log(cartKey);
+  //     $scope.data.totalCartQty = $scope.data.cart[0][cartKey].quantity || 0;
+  //   }
+  //   $scope.data.updateCartStatus();
+  // }
+
+  // empty cart for checkout success logic
+  $scope.data.emptyCart = function() {
+    Moltin_API.getENV()
+    .then(function(env) {
+      var moltin = new Moltin({publicId: env.data.MOLTIN_CLIENT_ID});
+      moltin.Authenticate(function() {
+        // var cartID =
+        moltin.Cart.Remove(cartKey, function() {
+          var cart = moltin.Cart.Contents();
+          var cartContents = [];
+          cartContents.push(cart.contents);
+          localStorageService.set("cart", cartContents);
+          $scope.data.cart = localStorageService.get("cart");
+          $scope.data.totalCartQty = 0;
+          if (localStorageService.get('cart') !== null) {
+            var cartKey = Object.keys(localStorageService.get('cart')['0'])[0]
+          } else {
+            var cartKey = null;
+          }
+          $scope.data.totalCartQty = 0;
+          $scope.data.updateCartStatus();
+          $scope.$apply();
+          $state.reload();
+        },
+        function(error) {
+          console.log(error);
+        });
+      })
+    }).catch(function(error) {
+      console.log(error);
+    })
+  }
+
+
+  // run updateCartStatus on controller instantiation
+  $scope.data.updateCartStatus();
+
   $scope.data.purchaseSubmission = function() {
     $scope.view.processingPayment = "processing";
     // console.log($scope.form);
@@ -75,12 +169,13 @@ app.controller('Checkout_Controller', ['$scope', '$state', '$timeout', 'localSto
                 .then(function(data) {
                   console.log(data);
                   $state.transitionTo('checkoutSuccess');
+                  $scope.data.emptyCart()
                   $scope.data.redirectHome();
                 }).catch(function(error){
                   console.log(error);
                 })
               }).catch(function(error) {
-
+                console.log(error);
               })
 
               // ** Create Respondent by Directly Accessing TTI API (Open Link)
@@ -127,7 +222,7 @@ app.controller('Checkout_Controller', ['$scope', '$state', '$timeout', 'localSto
   },
   $scope.data.redirectHome = function() {
     $timeout(function() {
-      $state.transitionTo('landingPage');
+      $scope.view.leaveSite();
     }, 10000)
   }
 }])
