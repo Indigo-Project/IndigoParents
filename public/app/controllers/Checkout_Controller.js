@@ -53,7 +53,6 @@ app.controller('Checkout_Controller', ['$scope', '$state', '$timeout', 'localSto
             // console.log(payment);
             // console.log(payment.message);
             if (payment.message === "Payment completed successfully") {
-              $scope.view.processingPayment = "success";
               $scope.$apply();
               var schoolCode = localStorageService.get('schoolInstance');
               // console.log(schoolCode);
@@ -70,9 +69,16 @@ app.controller('Checkout_Controller', ['$scope', '$state', '$timeout', 'localSto
 
               mLabs.assignNewPassword(schoolCode)
               .then(function(data) {
-                console.log(data);
+                // console.log(data);
                 respondentData.password = data.data.password;
-                SG.successfulPurchaseEmail(respondentData, schoolCode);
+                SG.successfulPurchaseEmail(respondentData, schoolCode)
+                .then(function(data) {
+                  console.log(data);
+                  $state.transitionTo('checkoutSuccess');
+                  $scope.data.redirectHome();
+                }).catch(function(error){
+                  console.log(error);
+                })
               }).catch(function(error) {
 
               })

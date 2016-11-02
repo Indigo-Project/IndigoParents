@@ -71,8 +71,8 @@ app.controller('Admin_Controller', ['$scope', '$http', '$state', 'mLabs', 'schoo
     if($scope.data.pwObj) {
       mLabs.loadNewPasswords($scope.view.selectedSchool, $scope.data.pwObj)
       .then(function(data) {
-        console.log(data);
-        console.log(data.data.count);
+        // console.log(data);
+        // console.log(data.data.count);
         $scope.data.showLinkInfo($scope.view.selectedSchool)
         $scope.data.pwAddedCount = data.data.count;
         $scope.view.loadFinished = true;
