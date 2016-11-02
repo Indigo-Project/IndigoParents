@@ -4,7 +4,15 @@ app.controller('Checkout_Controller', ['$scope', '$state', '$timeout', '$window'
   $scope.form = {};
   $scope.view.paymentStatus = "";
 
+  $scope.view.checkoutAccess = localStorageService.get('checkoutStatus') || null;
+  console.log($scope.view.checkoutAccess);
+
+  if($scope.view.checkoutAccess === "post-checkout-off") {
+    $state.transitionTo("productsPage");
+  }
+
   $scope.view.leaveSite = function() {
+    localStorageService.set('checkoutStatus', 'post-checkout-off')
     $window.location.href = "http://www.indigoproject.org/parent-night";
   }
 
@@ -38,6 +46,10 @@ app.controller('Checkout_Controller', ['$scope', '$state', '$timeout', '$window'
   } else {
     $scope.data.totalCartQty = 0;
   }
+
+  // if ($scope.data.totalCartQty < 1 && $scope.data.checkoutAccess !== "post-checkout") {
+  //   $state.transitionTo('productsPage');
+  // }
 
   // update view.cartEmpty based on totalCart Qty
   $scope.data.updateCartStatus = function() {
@@ -99,111 +111,112 @@ app.controller('Checkout_Controller', ['$scope', '$state', '$timeout', '$window'
 
   $scope.data.purchaseSubmission = function() {
     if($scope.data.totalCartQty > 1) {
-      alert('We currently only support purchases of 1 assessment at a time. If you would like to purchase more, please re-open the original link.')
+      alert('We currently only support purchases of 1 assessment at a time. If you would like to purchase more, please re-open the original link after checkout. Click "reset-order" to reset your order.')
     } else {
-      // $scope.view.processingPayment = "processing";
-      // // console.log($scope.form);
-      // Moltin_API.getENV()
-      // .then(function(env) {
-      //   // console.log(env);
-      //   var moltin = new Moltin({publicId: env.data.MOLTIN_CLIENT_ID});
-      //   // console.log(moltin);
-      //   moltin.Authenticate(function() {
-      //     var cart = moltin.Cart.Checkout();
-      //     // console.log(cart);
-      //     var cartContents = moltin.Cart.Contents();
-      //     // console.log(cartContents);
-      //     moltin.Cart.Complete({
-      //       customer: {
-      //         first_name: $scope.form.firstName,
-      //         last_name: $scope.form.lastName,
-      //         email: $scope.form.email
-      //       },
-      //       gateway: 'stripe',
-      //       bill_to: {
-      //         first_name: $scope.form.billingFirstName,
-      //         last_name: $scope.form.billingLastName,
-      //         address_1: "4500 19th street",
-      //         address_2: "203",
-      //         city: "Boulder",
-      //         county: "Boulder",
-      //         country: 'US',
-      //         postcode: "80304",
-      //         phone: "6109551011"
-      //       }
-      //     }, function(order) {
-      //       // console.log(order);
-      //       // console.log(order.id);
-      //       moltin.Checkout.Payment('purchase', order.id, {
-      //         data: {
-      //           first_name: $scope.form.billingFirstName,
-      //           last_name: $scope.form.billingLastName,
-      //           number: $scope.form.cardNumber,
-      //           expiry_month: $scope.form.expM,
-      //           expiry_year: $scope.form.expY,
-      //           cvv: $scope.form.CVV
-      //         }
-      //       }, function(payment) {
-      //         // console.log(payment);
-      //         // console.log(payment.message);
-      //         if (payment.message === "Payment completed successfully") {
-      //           $scope.$apply();
-      //           var schoolCode = localStorageService.get('schoolInstance');
-      //           // console.log(schoolCode);
-      //           var respondentData = {
-      //             first_name: $scope.form.firstName,
-      //             last_name: $scope.form.lastName,
-      //             email: $scope.form.email,
-      //             gender: $scope.form.gender,
-      //             company: $scope.form.company,
-      //             position_job: $scope.form.position_job
-      //           }
-      //
-      //           // ** Create Respondent by Directly Accessing TTI API (Secure Link)
-      //
-      //           mLabs.assignNewPassword(schoolCode)
-      //           .then(function(data) {
-      //             // console.log(data);
-      //             respondentData.password = data.data.password;
-      //             SG.successfulPurchaseEmail(respondentData, schoolCode)
-      //             .then(function(data) {
-      //               console.log(data);
-      //               $state.transitionTo('checkoutSuccess');
-      //               $scope.data.emptyCart()
-      //               $scope.data.redirectHome();
-      //             }).catch(function(error){
-      //               console.log(error);
-      //             })
-      //           }).catch(function(error) {
-      //             console.log(error);
-      //           })
-      //
-      //           // ** Create Respondent by Directly Accessing TTI API (Open Link)
-      //
-      //           // console.log(respondentData);
-      //           // TTI_API.createRespondent(schoolCode, respondentData)
-      //           // .then(function(data) {
-      //           //   console.log('success..');
-      //           //   if (data.data.status === "201 Created") {
-      //           //     SG.successfulPurchaseEmail(data.data.body, schoolCode);
-      //           //   } else {
-      //           //     mLabs.getUnassignedPasswords(schoolCode);
-      //           //   }
-      //           // }).catch(function(error) {
-      //           //   console.log(error);
-      //           // })
-      //         }
-      //       }, function(error1, error2) {
-      //         console.log(error1);
-      //         console.log(error2);
-      //         alert("There was an error - please re-enter your payment information and try again.")
-      //       });
-      //     }, function(error1, error2) {
-      //       console.log(error1);
-      //       console.log(error2);
-      //     });
-      //   })
-      // })
+      $scope.view.processingPayment = "processing";
+      // console.log($scope.form);
+      Moltin_API.getENV()
+      .then(function(env) {
+        // console.log(env);
+        var moltin = new Moltin({publicId: env.data.MOLTIN_CLIENT_ID});
+        // console.log(moltin);
+        moltin.Authenticate(function() {
+          var cart = moltin.Cart.Checkout();
+          // console.log(cart);
+          var cartContents = moltin.Cart.Contents();
+          // console.log(cartContents);
+          moltin.Cart.Complete({
+            customer: {
+              first_name: $scope.form.firstName,
+              last_name: $scope.form.lastName,
+              email: $scope.form.email
+            },
+            gateway: 'stripe',
+            bill_to: {
+              first_name: $scope.form.billingFirstName,
+              last_name: $scope.form.billingLastName,
+              address_1: "4500 19th street",
+              address_2: "203",
+              city: "Boulder",
+              county: "Boulder",
+              country: 'US',
+              postcode: "80304",
+              phone: "6109551011"
+            }
+          }, function(order) {
+            // console.log(order);
+            // console.log(order.id);
+            moltin.Checkout.Payment('purchase', order.id, {
+              data: {
+                first_name: $scope.form.billingFirstName,
+                last_name: $scope.form.billingLastName,
+                number: $scope.form.cardNumber,
+                expiry_month: $scope.form.expM,
+                expiry_year: $scope.form.expY,
+                cvv: $scope.form.CVV
+              }
+            }, function(payment) {
+              // console.log(payment);
+              // console.log(payment.message);
+              if (payment.message === "Payment completed successfully") {
+                $scope.$apply();
+                var schoolCode = localStorageService.get('schoolInstance');
+                // console.log(schoolCode);
+                var respondentData = {
+                  first_name: $scope.form.firstName,
+                  last_name: $scope.form.lastName,
+                  email: $scope.form.email,
+                  gender: $scope.form.gender,
+                  company: $scope.form.company,
+                  position_job: $scope.form.position_job
+                }
+
+                // ** Create Respondent by Directly Accessing TTI API (Secure Link)
+
+                mLabs.assignNewPassword(schoolCode)
+                .then(function(data) {
+                  // console.log(data);
+                  respondentData.password = data.data.password;
+                  SG.successfulPurchaseEmail(respondentData, schoolCode)
+                  .then(function(data) {
+                    console.log(data);
+                    localStorageService.set('checkoutStatus', 'post-checkout-on');
+                    $state.transitionTo('checkoutSuccess');
+                    $scope.data.emptyCart()
+                    $scope.data.redirectHome();
+                  }).catch(function(error){
+                    console.log(error);
+                  })
+                }).catch(function(error) {
+                  console.log(error);
+                })
+
+                // ** Create Respondent by Directly Accessing TTI API (Open Link)
+
+                // console.log(respondentData);
+                // TTI_API.createRespondent(schoolCode, respondentData)
+                // .then(function(data) {
+                //   console.log('success..');
+                //   if (data.data.status === "201 Created") {
+                //     SG.successfulPurchaseEmail(data.data.body, schoolCode);
+                //   } else {
+                //     mLabs.getUnassignedPasswords(schoolCode);
+                //   }
+                // }).catch(function(error) {
+                //   console.log(error);
+                // })
+              }
+            }, function(error1, error2) {
+              console.log(error1);
+              console.log(error2);
+              alert("There was an error - please re-enter your payment information and try again.")
+            });
+          }, function(error1, error2) {
+            console.log(error1);
+            console.log(error2);
+          });
+        })
+      })
     }
   }
 
@@ -216,6 +229,6 @@ app.controller('Checkout_Controller', ['$scope', '$state', '$timeout', '$window'
   $scope.data.redirectHome = function() {
     $timeout(function() {
       $scope.view.leaveSite();
-    }, 10000)
+    }, 5000)
   }
 }])

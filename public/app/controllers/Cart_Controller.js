@@ -5,6 +5,7 @@ app.controller('Cart_Controller', ['$scope', '$state', '$http', 'localStorageSer
 
   $scope.data.mastheadLoaded = true;
 
+  $scope.data.purchaseCta = 'Purchase';
   // set cartKey variable to key of cart object
   // console.log(localStorageService.get('cart'));
   // console.log(Object.keys(localStorageService.get('cart')['0']));
@@ -67,6 +68,9 @@ app.controller('Cart_Controller', ['$scope', '$state', '$http', 'localStorageSer
 
   // run when user clicks 'add to cart' from products page
   $scope.data.addToCart = function(productSlug) {
+
+    $scope.data.purchaseCta = "Loading..."
+    localStorageService.set('checkoutStatus', 'in-progress')
 
     Moltin_API.getENV()
     .then(function(env) {
