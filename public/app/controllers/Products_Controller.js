@@ -1,9 +1,16 @@
-app.controller('Products_Controller', ['$scope', '$state', 'Moltin_API', function($scope, $state, Moltin_API){
+app.controller('Products_Controller', ['$scope', '$state', '$timeout', 'localStorageService', 'Moltin_API', function($scope, $state, $timeout, localStorageService, Moltin_API){
   $scope.view = {};
   $scope.data = {};
   $scope.data.products = [];
   $scope.data.productsLoaded = false;
   $scope.data.orderQuantity = 1;
+
+  // $scope.data.timeoutStatus = localStorageService.get('timeoutStatus') || "off";
+  //
+  // if ($scope.data.timeoutStatus === "on") {
+  //   $timeout.cancel(timer);
+  // }
+
   $scope.data.getIndigoInventory = function() {
     Moltin_API.getIndigoInventory()
     .then(function(data) {
@@ -15,4 +22,5 @@ app.controller('Products_Controller', ['$scope', '$state', 'Moltin_API', functio
       console.log(error);
     })
   }
+
 }])
