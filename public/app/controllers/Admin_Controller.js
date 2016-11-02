@@ -44,7 +44,7 @@ app.controller('Admin_Controller', ['$scope', '$http', '$state', 'mLabs', 'schoo
 
   $scope.data.generateLink = function() {
     if ($scope.view.selectedSchool !== "default") {
-      $scope.view.schoolLink = 'localhost:3005/school-links/' + $scope.view.selectedSchool;
+      $scope.view.schoolLink = 'http://www.indigotheassessment.com/school-links/' + $scope.view.selectedSchool;
     }
   }
 

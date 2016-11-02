@@ -13,6 +13,11 @@ var schools = {
   caprock: {
     code: "caprock",
     name: "Caprock Academy"
+  },
+
+  "prospect-ridge": {
+    code: "prospect-ridge",
+    name: "Prospect Ridge Academy"
   }
 
 }

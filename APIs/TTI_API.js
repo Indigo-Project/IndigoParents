@@ -24,6 +24,14 @@ var linkLocations = {
       name: "Caprock Academy",
       id: ""
     }
+  },
+  "prospect-ridge": {
+    auth: "UFJPU1BFQ1RSSURHRToxMjM0NTY3OA==",
+    accountID: "PROSPECTRIDGE",
+    mainLink: {
+      name: "Prospect Ridge Academy",
+      id: "312440JAG"
+    }
   }
 }
 
