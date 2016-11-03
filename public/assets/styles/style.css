@@ -313,6 +313,9 @@ form.checkout-form {
   display: flex;
   justify-content: space-between; }
 
+div.checkout-filler {
+  width: 10vw; }
+
 div.checkout-user {
   display: flex;
   flex-direction: column;
