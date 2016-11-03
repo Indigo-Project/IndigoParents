@@ -5,6 +5,12 @@ app.controller('Products_Controller', ['$scope', '$state', '$timeout', 'localSto
   $scope.data.productsLoaded = false;
   $scope.data.orderQuantity = 1;
 
+  var checkoutStatus = localStorageService.get('checkoutStatus')
+  if(checkoutStatus === "post-checkout-off" || checkoutStatus === "post-checkout-on") {
+    localStorageService.remove('checkoutStatus')
+    localStorageService.remove('invQty')
+  }
+
   // $scope.data.timeoutStatus = localStorageService.get('timeoutStatus') || "off";
   //
   // if ($scope.data.timeoutStatus === "on") {

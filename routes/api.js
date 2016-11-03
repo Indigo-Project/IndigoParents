@@ -113,6 +113,9 @@ router.post('/:link/add-passwords', function(req, res, next) {
                 addToDBObj.password = outputPassword;
                 addToDBObj.link = req.body.schoolCode;
                 addToDBObj.assigned = false;
+                addToDBObj.first_name = "";
+                addToDBObj.last_name= "";
+                addToDBObj.email = "";
                 mongo.addPassword(db, req.body.schoolCode, addToDBObj)
                 count ++;
               }
@@ -120,6 +123,9 @@ router.post('/:link/add-passwords', function(req, res, next) {
               addToDBObj.password = outputPassword;
               addToDBObj.link = req.body.schoolCode;
               addToDBObj.assigned = false;
+              addToDBObj.first_name = "";
+              addToDBObj.last_name= "";
+              addToDBObj.email = "";
               mongo.addPassword(db, req.body.schoolCode, addToDBObj)
               count ++;
             }
@@ -132,8 +138,9 @@ router.post('/:link/add-passwords', function(req, res, next) {
 })
 
 // Retrieve fresh unassigned password by link, assign to user, and mark as assigned
-router.get('/:link/assign-new-password', function(req, res, next) {
+router.post('/:link/assign-new-password', function(req, res, next) {
   console.log(req.params.link);
+  var respondentData = req.body.respondentData;
   mongo.mongoDBConnect(mongo.indigoParentsURI)
   .then(function(data) {
     mongo.getAllPasswordsByLink(data.db, req.params.link)
@@ -155,7 +162,13 @@ router.get('/:link/assign-new-password', function(req, res, next) {
       if(!unassignedPasswordExists) {
         res.end("all passwords for this link have been assigned - generate new passwords")
       }
-      mongo.assignPassword(data.db, req.params.link, passwordToAssign)
+      var mLabsData = {
+        pw: passwordToAssign,
+        first_name: respondentData.first_name,
+        last_name: respondentData.last_name,
+        email: respondentData.email
+      }
+      mongo.assignPassword(data.db, req.params.link, mLabsData)
       .then(function(result){
         mongo.mongoDBDisconnect(data.db);
         res.send(result);

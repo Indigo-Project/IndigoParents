@@ -75,15 +75,14 @@ var database = {
     return cursor.toArray();
   },
 
-  assignPassword: function(db, schoolCode, pw) {
+  assignPassword: function(db, schoolCode, data) {
 
     return new Promise(function(resolve, reject) {
+      console.log("mlabsData:", data);
       var collection = db.collection(schoolCode + "Passwords");
-      collection.updateOne({password: pw}, {$set: {assigned: true}}, function(err, result) {
+      collection.updateOne({password: data.pw}, {$set: {assigned: true, first_name: data.first_name, last_name: data.last_name, email: data.email }}, function(err, result) {
         assert.equal(null, err);
-        assert.equal(1, result.matchedCount);
-        assert.equal(1, result.modifiedCount);
-        resolve({result: result, password: pw});
+        resolve({result: result, password: data.pw});
       })
     })
   }

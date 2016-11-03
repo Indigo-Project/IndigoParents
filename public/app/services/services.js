@@ -120,11 +120,12 @@ app.factory("mLabs", ['$http', function($http) {
         })
       })
     },
-    assignNewPassword: function(schoolCode) {
+    assignNewPassword: function(schoolCode, respondentData) {
       return new Promise(function(resolve, reject) {
         $http({
-          method: "GET",
+          method: "POST",
           url: "/api/" + schoolCode + "/assign-new-password",
+          data: { respondentData: respondentData }
         }).then(function(data) {
           if (data) {
             resolve(data);

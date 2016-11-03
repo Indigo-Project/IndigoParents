@@ -117,6 +117,7 @@ app.controller('Checkout_Controller', ['$scope', '$state', '$timeout', '$window'
   $scope.data.purchaseSubmission = function() {
     if($scope.data.totalCartQty > 1) {
       alert('We currently only support purchases of 1 assessment at a time. If you would like to purchase more, please re-open the original link after checkout. Click "reset-order" to reset your order.')
+      $scope.data.emptyCart();
     } else {
       $scope.view.processingPayment = "processing";
       // console.log($scope.form);
@@ -178,7 +179,7 @@ app.controller('Checkout_Controller', ['$scope', '$state', '$timeout', '$window'
 
                 // ** Create Respondent by Directly Accessing TTI API (Secure Link)
 
-                mLabs.assignNewPassword(schoolCode)
+                mLabs.assignNewPassword(schoolCode, respondentData)
                 .then(function(data) {
                   // console.log(data);
                   respondentData.password = data.data.password;
