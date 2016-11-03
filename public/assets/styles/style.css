@@ -131,6 +131,7 @@ div.one-product {
   div.one-product div.product-right {
     display: flex;
     flex-direction: column;
+    width: 50vw;
     padding: 0px 0px 0px 59px; }
     div.one-product div.product-right div.product-heading {
       display: flex;
