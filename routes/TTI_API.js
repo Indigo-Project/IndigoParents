@@ -3,7 +3,7 @@ var router = express.Router();
 var path = require('path');
 var csv = require('csv');
 
-var mongo = require('../Database/mongo-db');
+var mongo = require('../database/mongo-db');
 var TTI = require('../APIs/TTI_API');
 
 router.post("/validate-request-endpoint", function(req, res, next) {
