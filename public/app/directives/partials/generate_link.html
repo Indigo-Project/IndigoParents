@@ -1,10 +1,205 @@
 <section class="generate-link">
-  <h4 class="select-school">Select School:</h4>
-  <select class="form-control" ng-model="view.selectedSchool" ng-change="data.generateLink()">
-    <option value="default"> -- no selection -- </option>
-    <option value="test">Indigo Parents Test</option>
-    <option value="caprock">Caprock Academy</option>
-    <option value="prospect-ridge">Prospect Ridge Academy</option>
-  </select>
-  <a>{{view.schoolLink}}</a>
+
+  <section class="gl-select-school">
+    <h4 class="select-school">Select School:</h4>
+    <select class="form-control" ng-model="view.selectedSchool" ng-change="data.generateLink()">
+      <option value="default"> -- no selection -- </option>
+      <option value="test">Indigo Parents Test</option>
+      <option value="arete">Arete Academy</option>
+      <option value="prospect-ridge">Prospect Ridge Academy</option>
+    </select>
+  </section>
+
+  <div class="generate-link-options" ng-show="view.selectedSchool !== 'default'">
+    <button class="form-control create" ng-click="view.showLinkCreation()">Create New Parents Link</button>
+    <button class="form-control view" ng-click="view.showLinkList()">View Previous & Current Parent Links</button>
+  </div>
+
+  <section ng-show="view.showLinkCreationInterface" class="generate-link-interface">
+    <h4>Create New Parents Night Link</h4>
+    <form class="generate-link-interface" ng-submit="data.submitLinkForGeneration()">
+      <h5 class="instruction-header">1. Enter Link Name</h5>
+      <input class="form-control name" type="text" ng-model="newLink.name" placeholder="enter link name" required>
+
+      <!-- Parent Link Integration -->
+      <h5 class="instruction-header">2. Integrate TTI Parents Link</h5>
+      <div class="parent-link">
+
+        <div class="gl-section">
+          <label>Enter Authentication Username</label>
+          <p class="input-subtext">The username you used to log in to the TTI Account</p>
+          <input class="form-control short" type="text" ng-model="newLink.parents.TTIusername" ng-change="data.validateParentLink()" required autocomplete="on" placeholder="username">
+        </div>
+
+        <div class="gl-section">
+          <label>Enter Authentication Password</label>
+          <p class="input-subtext">The password you used to log in to the TTI Account</p>
+          <input class="form-control short" type="text" ng-model="newLink.parents.TTIpassword" ng-change="data.validateParentLink()" required autocomplete="on" placeholder="password">
+        </div>
+
+        <div class="gl-section">
+          <label>Enter Account ID</label>
+          <p class="input-subtext">The Account ID for the Account housing the link. Within TTI, click on <br> the Account Info tab and copy the text string from the 'login' field.</p>
+          <input class="form-control short" type="text" ng-model="newLink.parents.TTIaccountID" ng-change="data.validateParentLink()" required autocomplete="on" placeholder="account ID">
+        </div>
+
+        <div class="gl-section">
+          <label>Enter Link ID</label>
+          <p class="input-subtext">The associated 9 character Link ID. Within the link, <br>click on the Link Info tab and copy the text string from the 'login' field.</p>
+          <input class="form-control short" type="text" ng-model="newLink.parents.TTIlinkID" ng-change="data.validateParentLink()" required autocomplete="on" placeholder="link ID">
+          <!-- pattern=".{9}" title="all links should consist of 9 characters" -->
+        </div>
+
+        <div class="link-status">
+          <h5 ng-show="view.parentLinkIdStatus === 'verifying'">Verifying Link...</h5>
+          <div class="verified" ng-show="view.parentLinkIdStatus === 'verified'">
+            <span>"{{data.currentParentLinkName}}"</span>
+            <div class="verified-msg">
+              <span class="glyphicon glyphicon-ok"></span>
+              <p class="verified-msg">Link Verified</p>
+            </div>
+          </div>
+          <h5 ng-show="view.parentLinkIdStatus === 'unverified'"><span class="glyphicon glyphicon-remove"></span> Link Not Verified</h5>
+          <h5 ng-show="view.parentLinkIdStatus === 'incomplete'"> Incomplete Link ID ...</h5>
+        </div>
+
+      </div>
+
+      <!-- Student Link Integration -->
+      <h5 class="instruction-header">3. Integrate TTI Student Link (optional)</h5>
+      <p class="input-subtext">If Student Link is not integrated and verified, only parents will be able to purchase</p>
+      <input type="button" class="form-control add-student-link" ng-click="view.toggleStudentLink()" value="Add Student TTI Link (optional)" ng-show="!view.addingStudentLink"></input>
+      <input type="button" class="form-control remove-student-link" ng-click="view.toggleStudentLink()" value="Remove Student TTI Link (optional)" ng-show="view.addingStudentLink"></input>
+      <div ng-show="view.addingStudentLink" class="student-link">
+
+        <div class="gl-section">
+          <label>Enter Authentication Username</label>
+          <p class="input-subtext">The username you used to log in to the TTI Account</p>
+          <input class="form-control short" type="text" ng-model="newLink.students.TTIusername" ng-change="data.validateStudentLink()" ng-required="view.addingStudentLink" autocomplete="on" placeholder="username">
+        </div>
+
+        <div class="gl-section">
+          <label>Enter Authentication Password</label>
+          <p class="input-subtext">The password you used to log in to the TTI Account</p>
+          <input class="form-control short" type="text" ng-model="newLink.students.TTIpassword" ng-change="data.validateStudentLink()" ng-required="view.addingStudentLink" autocomplete="on" placeholder="password">
+        </div>
+
+        <div class="gl-section">
+          <label>Enter Account ID</label>
+          <p class="input-subtext">The Account ID for the Account housing the link. Within TTI, click on <br> the Account Info tab and copy the text string from the 'login' field.</p>
+          <input class="form-control short" type="text" ng-model="newLink.students.TTIaccountID" ng-change="data.validateStudentLink()" ng-required="view.addingStudentLink" autocomplete="on" placeholder="account ID">
+        </div>
+
+        <div class="gl-section">
+          <label>Enter Link ID</label>
+          <p class="input-subtext">The associated 9 character Link ID. Within the link, <br>click on the Link Info tab and copy the text string from the 'login' field.</p>
+          <input class="form-control short" type="text" ng-model="newLink.students.TTIlinkID" ng-change="data.validateStudentLink()" ng-required="view.addingStudentLink" autocomplete="on" placeholder="link ID">
+          <!-- pattern=".{9}" title="all links should consist of 9 characters" -->
+        </div>
+
+        <div class="link-status">
+          <h5 ng-show="view.studentLinkIdStatus === 'verifying'">Verifying Link...</h5>
+          <div class="verified" ng-show="view.studentLinkIdStatus === 'verified'">
+            <span>"{{data.currentStudentLinkName}}"</span>
+            <div class="verified-msg">
+              <span class="glyphicon glyphicon-ok"></span>
+              <p class="verified-msg">Link Verified</p>
+            </div>
+          </div>
+          <h5 ng-show="view.studentLinkIdStatus === 'unverified'"><span class="glyphicon glyphicon-remove"></span> Link Not Verified</h5>
+          <h5 ng-show="view.studentLinkIdStatus === 'incomplete'"> Incomplete Link ID ...</h5>
+        </div>
+
+      </div>
+
+      <h5 class="instruction-header">4. Set Available Purchase Quantities (Parents/Students)</h5>
+      <p class="input-subtext">The Student TTI link must be integrated and verified before the student quantity can be set.</p>
+      <div class="set-quantity">
+        <div>
+          <p class="input-subtext-big">Parent Max. Qty</p>
+          <label><input class="form-control" type="number" min="1" step="1" max="10" ng-value="2" ng-model="newLink.parents.productMaxQty" ng-init="newLink.parents.productMaxQty" placeholder="0" required></input></label>
+        </div>
+        <div ng-show="view.studentLinkIdStatus === 'verified'">
+          <p class="input-subtext-big">Student Max. Qty</p>
+          <label><input class="form-control" type="number" min="1" step="1" max="10" ng-value="1" ng-model="newLink.students.productMaxQty" ng-init="newLink.students.productMaxQty" placeholder="0" ng-required="view.addingStudentLink"></input></label>
+        </div>
+      </div>
+
+      <h5 class="instruction-header">5. Set Product Pricing (Parents/Students)</h5>
+      <p class="input-subtext">The Student TTI link must be integrated and verified before the student price can be set.</p>
+      <div class="set-price">
+        <div>
+          <p class="input-subtext-big">Parent Price</p>
+          <label><p>$</p><input class="form-control" type="number" min="1.0" step="1.0" max="1000" ng-model="newLink.parents.productPrice" ng-init="newLink.parents.productPrice" placeholder="00.00" required></input></label>
+        </div>
+        <div ng-show="view.studentLinkIdStatus === 'verified'">
+          <p class="input-subtext-big">Student Price</p>
+          <label><p>$</p><input class="form-control" type="number" min="1.0" step="1.0" max="1000" ng-model="newLink.students.productPrice" ng-init="newLink.students.productPrice" placeholder="00.00" ng-required="view.addingStudentLink"></input></label>
+        </div>
+      </div>
+
+      <h5 class="instruction-header">6. Submit & Generate Link</h5>
+      <div class="gl-submit">
+        <input class="form-control submit-gen-link" type="submit" value="Submit & Generate"></input>
+        <h3>{{view.glSubmitStatus}}</h3>
+      </div>
+
+
+    </form>
+
+  </section>
+
+  <section ng-show="view.showLinkListInterface" class="generated-link-list">
+
+    <h1 ng-show="view.linkListStatus === 'loading'">Loading...</h1>
+
+    <section ng-show="view.linkListStatus === 'empty'">
+      <h1>No Links Found for Current School</h1>
+      <h4>Select 'Generate Link' from the function menu to create a link for the current school.</h4>
+    </section>
+
+    <section ng-show="view.linkListStatus === 'populated'">
+
+      <h4>Links for {{view.selectedSchool}}</h4>
+
+      <table class="table link-list-table">
+        <thead>
+          <th>Name</th>
+          <th>URL</th>
+          <th>Date Created</th>
+          <th>Specifications</th>
+          <th>Status</th>
+        </thead>
+        <tbody class="link-list-body">
+          <tr ng-repeat="link in data.currentLinkList track by $index">
+            <td>{{link.ogName}}</td>
+            <td class="link-url">
+              <input class="form-control" ng-model="link.url" readonly></input>
+              <button class="form-control copy-link-url" ng-click="view.copyLinkUrl($index)">Copy Link</button>
+            </td>
+            <td>{{link.dateCreated}}</td>
+            <td class="link-spec">
+              <div class="link-parents">
+                <h5>Parents</h5>
+                <p>Max Qty: {{link.parents.productMaxQty}}</p>
+                <p>Price: {{link.parents.productPrice}}</p>
+              </div>
+              <div ng-show="data.currentLinkList.students" class="link-students">
+                <p>Max Qty: {{link.parents.productMaxQty}}</p>
+                <p>Price: {{link.parents.productPrice}}</p>
+              </div>
+              <div ng-show="!data.currentLinkList.students" class="link-students">
+                <h5>No Students</h5>
+              </div>
+            </td>
+            <td>{{link.active ? 'active' : 'inactive'}}</td>
+          </tr>
+        </tbody>
+      </table>
+
+    </section>
+
+
+  </section>
+
 </section>

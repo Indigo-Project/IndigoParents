@@ -5,14 +5,14 @@ var schools = {
     name: "Indigo Parents Test"
   },
 
-  test2: {
-    code: "test2",
-    name: "Indigo Parents Test 2"
-  },
+  // test2: {
+  //   code: "test2",
+  //   name: "Indigo Parents Test 2"
+  // },
 
-  caprock: {
-    code: "caprock",
-    name: "Caprock Academy"
+  arete: {
+    code: "arete",
+    name: "Arete Academy"
   },
 
   "prospect-ridge": {

@@ -44,7 +44,7 @@ app.config(function($stateProvider, $urlRouterProvider, $locationProvider, local
       templateUrl: "templates/generate_link.html"
     })
     .state('schoolSiteRedirect', {
-      url: '/school-links/:name',
+      url: '/school-links/:schoolCode/:linkName',
       templateUrl: "templates/school_site_redirect.html"
     })
     .state('TTITest', {
