@@ -9,6 +9,7 @@ var bodyParser = require('body-parser');
 var admin = require('./routes/admin-s');
 var api = require('./routes/api');
 var mail = require('./routes/mail');
+var TTI_API = require('./routes/TTI_API');
 
 // school specific server-routes (var declaration)
 var schoolLinks = require('./routes/school-links-s');
@@ -37,6 +38,7 @@ app.use("/school-links/:name", express.static(__dirname + "/public/index.html"))
 app.use('/admin-s', admin);
 app.use('/api', api);
 app.use('/mail', mail);
+app.use('/TTI-API', TTI_API);
 
 // school specific server-routes (app implementation)
 app.use('/school-links-s', schoolLinks);

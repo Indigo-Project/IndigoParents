@@ -85,8 +85,109 @@ var database = {
         resolve({result: result, password: data.pw});
       })
     })
-  }
+  },
 
+  addGeneratedLink: function(db, linkInfo) {
+    return new Promise(function(resolve, reject) {
+      var linkCollection = linkInfo.schoolCode + 'Links';
+      var linkName = linkInfo.name;
+
+      // Access collection. If collection does not exist, create it and access it.
+      function enterCollection() {
+        return new Promise(function(resolve, reject) {
+
+          var workingCollection;
+          db.collection(linkCollection, {strict: true}, function(err, collection) {
+            if (err) {
+              if (err.message === 'Collection ' + linkCollection + ' does not exist. Currently in strict mode.') {
+                // console.log(linkCollection + ' collection does not exist. Create ' + linkCollection + ' collection');
+                db.createCollection(linkCollection, function(err, collection) {
+                  workingCollection = collection;
+                  // console.log('recently created collection', workingCollection);
+                  if (workingCollection) resolve(workingCollection);
+                })
+              } else {
+                // console.log('unidentified error - no collection created. check logs');
+                reject();
+              }
+            }
+            else {
+              workingCollection = collection;
+              // console.log(linkCollection + ' collection exists', workingCollection);
+              if (workingCollection) resolve(workingCollection);
+            }
+          });
+        })
+      }
+
+      enterCollection()
+      .then(function(workingCollection) {
+
+        workingCollection.find().toArray(function(err, docs) {
+          if (err) {
+            console.log(err);
+          } else {
+
+            var nameAlreadyExists = false;
+
+            for (var i = 0; i < docs.length; i++) {
+              console.log(docs[i].name, linkName);
+              if (docs[i].name === linkName) {
+                console.log('LINK EXISTS');
+                nameAlreadyExists = true;
+                break;
+              }
+            }
+
+            console.log('nameAlreadyExists', nameAlreadyExists);
+            // If name already exists, send message to client & do not add to database
+            if (nameAlreadyExists) {
+              console.log('Inside nameAlreadyExists', nameAlreadyExists);
+              resolve({status: 'name already exists'});
+
+            // If name does not already exists, add to database
+            } else {
+              workingCollection.insertOne(linkInfo, function(err, result) {
+                if (err) {
+                  console.log(err);
+                } else {
+                  // console.log(result);
+                  resolve({status: 'Success'});
+                }
+              })
+            }
+
+          }
+        })
+
+      })
+    })
+  },
+
+  getSchoolLinkList: function(db, schoolCode) {
+    return new Promise(function(resolve, reject) {
+      var collection = schoolCode + 'Links';
+
+      db.collection(collection, function(err, collection) {
+        if (err) {
+          console.log(err);
+        } else {
+          collection.find().toArray(function(err, docs) {
+            if (err) {
+              console.log(err);
+            } else if (!docs.length) {
+              console.log('empty collection');
+              resolve({status: 'empty collection'})
+            } else {
+              console.log('docs', docs);
+              resolve({status: 'populated', docs: docs})
+            }
+          });
+        }
+      })
+
+    });
+  }
 
 }
 

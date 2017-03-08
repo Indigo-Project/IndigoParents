@@ -9,6 +9,7 @@ app.factory('TTI_API', ['$http', function($http) {
       data: { accountID: accountID, linkID: linkID }
     })
   }
+
   service.createRespondent = function(school, data) {
     return new Promise(function(resolve,reject) {
       $http({
@@ -27,6 +28,23 @@ app.factory('TTI_API', ['$http', function($http) {
       })
     })
   }
+
+  service.validateTTILink = function(username, password, accountID, linkID, mode) {
+    return new Promise(function(resolve, reject) {
+      $http({
+        method: "POST",
+        url: "/TTI-API/validate-request-endpoint",
+        data: { username: username, password: password, accountID: accountID, linkID: linkID, mode: mode}
+      }).then(function(data) {
+        console.log(data);
+        resolve(data);
+      }).catch(function(error) {
+        console.log(error);
+        reject(error);
+      })
+    })
+  }
+
   return service;
 }])
 
@@ -132,6 +150,41 @@ app.factory("mLabs", ['$http', function($http) {
           } else {
             console.log('error');
           }
+        })
+      })
+    },
+    addNewGeneratedLink: function(linkInfo) {
+      return new Promise(function(resolve, reject) {
+        $http({
+          method: "POST",
+          url: "/admin-s/add-generated-link",
+          data: { linkInfo: linkInfo }
+        }).then(function(data) {
+          if (data) {
+            console.log('addNewGeneratedLink Service:', data);
+            resolve(data);
+          } else {
+            console.log('error');
+          }
+        }).catch(function(err) {
+          console.log(err);
+        })
+      })
+    },
+    getSchoolLinkList: function(schoolCode) {
+      return new Promise(function(resolve, reject) {
+        $http({
+          method: "POST",
+          url: "/admin-s/get-school-link-list",
+          data: { schoolCode: schoolCode }
+        }).then(function(data) {
+          if (data) {
+            resolve(data);
+          } else {
+            console.log('error');
+          }
+        }).catch(function(err) {
+          console.log(err);
         })
       })
     }
