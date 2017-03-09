@@ -4,7 +4,13 @@ var mongo = require('../database/mongo-db');
 var TTI_API = require('../APIs/TTI_API');
 
 var env = process.env.NODE_ENV
-var stripeSecret = env === 'DEVELOPMENT' ? process.env.STRIPE_TEST_SECRET : process.env.STRIPE_LIVE_SECRET
+var stripeSecret;
+if (env === 'DEVELOPMENT') {
+  stripeSecret = process.env.STRIPE_TEST_SECRET
+} else {
+  stripeSecret = process.env.STRIPE_LIVE_SECRET;
+}
+console.log(stripeSecret);
 var stripe = require('stripe')(stripeSecret);
 var router = express.Router();
 
