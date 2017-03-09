@@ -97,6 +97,8 @@ app.controller('Admin_Controller', ['$scope', '$http', '$timeout', '$state', 'mL
       var newDateObj = new Date();
       var dateCreated = (newDateObj.getMonth() + 1) + "/" + newDateObj.getDate() + "/" + newDateObj.getFullYear() + " - " + newDateObj.getHours() + ":" + newDateObj.getMinutes() + ":" + newDateObj.getSeconds();
 
+      console.log($scope.newLink.parents, $scope.newLink.students);
+
       var linkInfo = {
         name: $scope.newLink.name.replace(/\s/g, ''),
         ogName: $scope.newLink.name,
@@ -109,8 +111,8 @@ app.controller('Admin_Controller', ['$scope', '$http', '$timeout', '$state', 'mL
           password: $scope.newLink.parents.TTIpassword,
           TTIaccountID: $scope.newLink.parents.TTIaccountID,
           TTIlinkID: $scope.newLink.parents.TTIlinkID,
-          productMaxQty: $scope.newLink.parents.productMaxQty = 2,
-          productPrice: $scope.newLink.parents.productPrice = 25.00
+          productMaxQty: $scope.newLink.parents.productMaxQty,
+          productPrice: $scope.newLink.parents.productPrice
         }
       };
 
@@ -120,8 +122,8 @@ app.controller('Admin_Controller', ['$scope', '$http', '$timeout', '$state', 'mL
           password: $scope.newLink.students.TTIpassword,
           TTIaccountID: $scope.newLink.students.TTIaccountID,
           TTIlinkID: $scope.newLink.students.TTIlinkID,
-          productMaxQty: $scope.newLink.students.productMaxQty = 2,
-          productPrice: $scope.newLink.students.productPrice = 25.00
+          productMaxQty: $scope.newLink.students.productMaxQty,
+          productPrice: $scope.newLink.students.productPrice
         }
       }
 

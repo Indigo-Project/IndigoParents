@@ -5,22 +5,31 @@ app.controller('Checkout_Controller', ['$scope', '$state', '$timeout', '$window'
   $scope.form = {};
   $scope.view.paymentStatus = "";
 
-  var stripe = Stripe('pk_test_bBpUE70t4N2m4NUTxatiEtuH');
-  var elements = stripe.elements();
-  var card = elements.create('card');
-  card.mount('#card-element');
+  var stripeSecret, stripe, elements, card
+  var stripeSecret;
+  Moltin_API.getENV()
+  .then(function(data) {
+    var env = data.data;
+    stripeSecret = env === 'DEVELOPMENT' ? 'pk_test_bBpUE70t4N2m4NUTxatiEtuH' : 'pk_live_Jc8MsI8vrWaC0OTAeLPmXLWU' ;
+    var stripe = Stripe(stripeSecret);
+    var elements = stripe.elements();
+    var card = elements.create('card');
+    card.mount('#card-element');
 
-  $scope.data.cardError = '';
-  card.addEventListener('change', function(event) {
-    var displayError = document.getElementById('card-errors');
-    if (event.error) {
-      $scope.data.cardError = event.error;
-      displayError.textContent = event.error.message;
-    } else {
-      $scope.data.cardError = '';
-      displayError.textContent = '';
-    }
+    $scope.data.cardError = '';
+    card.addEventListener('change', function(event) {
+      var displayError = document.getElementById('card-errors');
+      if (event.error) {
+        $scope.data.cardError = event.error;
+        displayError.textContent = event.error.message;
+      } else {
+        $scope.data.cardError = '';
+        displayError.textContent = '';
+      }
+    });
+
   });
+
 
   $scope.view.checkoutAccess = localStorageService.get('checkoutStatus') || null;
   // $scope.data.timer;

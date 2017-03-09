@@ -23,7 +23,7 @@ router.get('/', function(req, res, next) {
 
 // GET ENV Variables
 router.get('/env', function(req, res, next){
-  var env = process.env;
+  var env = process.env.NODE_ENV;
   res.send(env);
 })
 

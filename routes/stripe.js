@@ -2,7 +2,10 @@ var express = require('express');
 var request = require('request');
 var mongo = require('../database/mongo-db');
 var TTI_API = require('../APIs/TTI_API');
-var stripe = require('stripe')(process.env.STRIPE_TEST_SECRET);
+
+var env = process.env.NODE_ENV
+var stripeSecret = env === 'DEVELOPMENT' ? process.env.STRIPE_TEST_SECRET : process.env.STRIPE_LIVE_SECRET
+var stripe = require('stripe')(stripeSecret);
 var router = express.Router();
 
 router.post('/submit-purchase', function(req, res ,next) {

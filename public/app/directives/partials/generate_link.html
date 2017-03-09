@@ -130,11 +130,11 @@
       <div class="set-price">
         <div>
           <p class="input-subtext-big">Parent Price</p>
-          <label><p>$</p><input class="form-control" type="number" min="1.0" step="1.0" max="1000" ng-model="newLink.parents.productPrice" ng-pattern="/(\d{3})([\.])(\d{2})/" ng-init="newLink.parents.productPrice" placeholder="00.00" required></input></label>
+          <label><p>$</p><input class="form-control" type="number" min="1" step="1" max="1000" ng-model="newLink.parents.productPrice" ng-init="newLink.parents.productPrice" placeholder="00.00" required></input></label>
         </div>
         <div ng-show="view.studentLinkIdStatus === 'verified'">
           <p class="input-subtext-big">Student Price</p>
-          <label><p>$</p><input class="form-control" type="number" min="1.0" step="1.0" max="1000" ng-model="newLink.students.productPrice" ng-pattern="/(\d{3})([\.])(\d{2})/" ng-init="newLink.students.productPrice" placeholder="00.00" ng-required="view.addingStudentLink"></input></label>
+          <label><p>$</p><input class="form-control" type="number" min="1" step="1" max="1000" ng-model="newLink.students.productPrice" ng-init="newLink.students.productPrice" placeholder="00.00" ng-required="view.addingStudentLink"></input></label>
         </div>
       </div>
 
