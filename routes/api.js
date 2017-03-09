@@ -8,6 +8,8 @@ var moltin = require('moltin')({
 });
 var csv = require('csv');
 var router = express.Router();
+var bPromise = require('bluebird');
+
 
 // GET local API
 router.get('/', function(req, res, next) {
@@ -88,14 +90,16 @@ router.post('/checkoutinfo', function(req, res, next) {
 })
 
 // ** ADD PASSWORDS TO MLABS DB BY SCHOOLCODE **
-router.post('/:link/add-passwords', function(req, res, next) {
+router.post('/add-passwords', function(req, res, next) {
 
   mongo.mongoDBConnect(mongo.indigoParentsURI).
   then(function(data) {
     var db = data.db
-    mongo.getAllPasswordsByLink(db, req.params.link)
+    mongo.getAllPasswordsByLink(db, req.body.schoolCode, req.body.linkID)
     .then(function(data) {
+
       csv.parse(req.body.csv, {columns: true}, function(err, output) {
+
         var count = 0;
         for (var i = 0; i < output.length; i++) {
           var outputPassword = output[i].Password.substring(10);
@@ -116,7 +120,7 @@ router.post('/:link/add-passwords', function(req, res, next) {
                 addToDBObj.first_name = "";
                 addToDBObj.last_name= "";
                 addToDBObj.email = "";
-                mongo.addPassword(db, req.body.schoolCode, addToDBObj)
+                mongo.addPassword(db, req.body.schoolCode, req.body.linkID, addToDBObj)
                 count ++;
               }
             } else {
@@ -126,7 +130,7 @@ router.post('/:link/add-passwords', function(req, res, next) {
               addToDBObj.first_name = "";
               addToDBObj.last_name= "";
               addToDBObj.email = "";
-              mongo.addPassword(db, req.body.schoolCode, addToDBObj)
+              mongo.addPassword(db, req.body.schoolCode, req.body.linkID, addToDBObj)
               count ++;
             }
           }
@@ -137,64 +141,176 @@ router.post('/:link/add-passwords', function(req, res, next) {
   })
 })
 
-// Retrieve fresh unassigned password by link, assign to user, and mark as assigned
-router.post('/:link/assign-new-password', function(req, res, next) {
-  console.log(req.params.link);
-  var respondentData = req.body.respondentData;
+router.post('/get-all-tti-links-for-school', function(req, res, next) {
+
+  console.log(req.body.schoolCode);
+
   mongo.mongoDBConnect(mongo.indigoParentsURI)
   .then(function(data) {
-    mongo.getAllPasswordsByLink(data.db, req.params.link)
-    .then(function(passwords) {
-      var passwordToAssign = "";
-      var indexOfPasswordToAssign = "";
-      var unassignedPasswordExists = false;
-      for (var i = 0; i < passwords.length; i++) {
-        if (passwords[i].assigned === false) {
-          console.log('false');
-          unassignedPasswordExists = true;
-          passwordToAssign = passwords[i].password;
-          indexOfPasswordToAssign = i;
-          break;
-        }
+    mongo.getAllTTILinksForSchool(data.db, req.body.schoolCode)
+    .then(function(links) {
+      console.log(links);
+      res.send(links);
+    }).catch(function(err) {
+      console.log(err);
+    })
+  })
+
+})
+
+// Retrieve fresh unassigned password by link, assign to user, and mark as assigned
+router.post('/assign-new-password', function(req, res, next) {
+
+  var schoolCode = req.body.linkInstanceData.schoolCode;
+  var linkIDs = { parents: req.body.linkInstanceData.parents.TTIlinkID, students: req.body.linkInstanceData.students.TTIlinkID};
+  var form = req.body.form;
+  var cart = req.body.cart;
+
+  // console.log('linkIDs', linkIDs);
+  // console.log('form', form);
+  // console.log('cart', cart);
+
+  mongo.mongoDBConnect(mongo.indigoParentsURI)
+  .then(function(data) {
+
+    var parentOrderQuantity = cart.parentOrderQuantity;
+    var studentOrderQuantity = cart.studentOrderQuantity || 0;
+
+    var totalPasswordCount = parentOrderQuantity + studentOrderQuantity;
+
+    function getPasswordsForOrder(role) {
+      return new Promise(function(resolve, reject) {
+
+        // console.log('------------------------------');
+        // console.log('------------------------------');
+
+        var linkID = linkIDs[role];
+        var orderQuantity = role === 'parents' ? parentOrderQuantity : studentOrderQuantity;
+        var currentPasswordsAssignedCount = 0;
+        var passwordArr = [];
+
+        console.log(role, linkID, orderQuantity, passwordArr);
+
+          mongo.getAllPasswordsByLink(data.db, schoolCode, linkID)
+          .then(function(passwords) {
+
+
+            var passwordsToAssign = [];
+            var unassignedPasswordExists = false;
+
+            var assignmentCount = 0;
+
+            for (var i = 0; i < orderQuantity; i++) {
+              for (var j = 0; j < passwords.length; j++) {
+                if (!passwords[j].assigned) {
+                  // console.log('false');
+                  unassignedPasswordExists = true;
+                  passwordsToAssign.push([passwords[j + assignmentCount].password, j + assignmentCount]);
+                  assignmentCount ++;
+                  break;
+                  }
+              }
+            }
+
+            // console.log(role, passwordsToAssign);
+            // console.log(role, unassignedPasswordExists);
+
+            if(!unassignedPasswordExists) {
+              res.end("all passwords for this link have been assigned - generate new passwords")
+            } else {
+
+              console.log(passwordsToAssign);
+              bPromise.each(passwordsToAssign, function(element, i, length) {
+
+                var mLabsData = {
+                  pw: element[0],
+                  first_name: form.firstName,
+                  last_name: form.lastName,
+                  email: form.email
+                }
+
+                mongo.assignPassword(data.db, schoolCode, linkID, mLabsData)
+                .then(function(result){
+                  // mongo.mongoDBDisconnect(data.db);
+                  // console.log(role + 'assignPassword result:', result);
+                  passwordArr.push(result.password);
+                  currentPasswordsAssignedCount ++;
+
+                  console.log("----------------------");
+                  // console.log(passwordArr);
+                  console.log(currentPasswordsAssignedCount, orderQuantity);
+                  console.log("----------------------");
+
+                  if (currentPasswordsAssignedCount === orderQuantity) {
+                    console.log('resolve(passwordArr)', passwordArr);
+                    resolve(passwordArr);
+                  }
+
+                })
+              })
+
+            }
+
+          }).catch(function(err){
+            console.log(err);
+          })
+
+      });
+    }
+
+    var assignedPasswords = {};
+    var returnObj = {};
+
+    getPasswordsForOrder('parents')
+    .then(function(data) {
+      console.log('after parents', data);
+      assignedPasswords.parents = data;
+
+      if (studentOrderQuantity) {
+
+        getPasswordsForOrder('students')
+        .then(function(data) {
+          console.log('after students', data);
+          assignedPasswords.students = data;
+
+
+          console.log(assignedPasswords);
+          res.send(assignedPasswords)
+
+        }).catch(function(err){
+          console.log(err);
+        })
+
+      } else {
+        res.send(assignedPasswords)
       }
-      console.log(indexOfPasswordToAssign);
-      console.log(passwordToAssign);
-      if(!unassignedPasswordExists) {
-        res.end("all passwords for this link have been assigned - generate new passwords")
-      }
-      var mLabsData = {
-        pw: passwordToAssign,
-        first_name: respondentData.first_name,
-        last_name: respondentData.last_name,
-        email: respondentData.email
-      }
-      mongo.assignPassword(data.db, req.params.link, mLabsData)
-      .then(function(result){
-        mongo.mongoDBDisconnect(data.db);
-        res.send(result);
-      }).catch(function(err){
-        console.log(err);
-      })
+
     }).catch(function(err){
       console.log(err);
     })
+
   }).catch(function(err){
     console.log(err);
   });
+
 });
 
 // *** TTI ***
 
 // GET TTI LINK DATA BASED ON ADMIN PORTAL SCHOOL SELECTION
-router.get('/:link/showLink', function(req, res, next) {
-  var selectedSchool = req.params.link;
-
+router.post('/show-link', function(req, res, next) {
+  // var selectedSchool = req.params.link;
   mongo.mongoDBConnect(mongo.indigoParentsURI).
   then(function(data) {
     var db = data.db
-    mongo.getAllPasswordsByLink(db, req.params.link)
+    mongo.getAllPasswordsByLink(db, req.body.selectedSchool, req.body.linkID)
     .then(function(data) {
-      res.send(data);
+      console.log('getAllPasswordsByLink data:', data);
+      var unassignedCount = 0;
+      for (var i = 0; i < data.length; i++) {
+        !data[i].assigned ? unassignedCount += 1 : null;
+      }
+      res.send({data: data, unassignedCount: unassignedCount});
 
   // ** ACCESS VIA TTI API
   // var ssRef = TTI_API.linkLocations[selectedSchool];
@@ -214,6 +330,7 @@ router.get('/:link/showLink', function(req, res, next) {
   //     res.end(body);
   //   }
   // })
+
     })
   })
 })

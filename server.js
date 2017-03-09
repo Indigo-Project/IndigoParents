@@ -10,6 +10,7 @@ var admin = require('./routes/admin-s');
 var api = require('./routes/api');
 var mail = require('./routes/mail');
 var TTI_API = require('./routes/TTI_API');
+var stripe = require('./routes/stripe');
 
 // school specific server-routes (var declaration)
 var schoolLinks = require('./routes/school-links-s');
@@ -32,13 +33,14 @@ app.use("/admin", express.static(__dirname + "/public/index.html"));
 app.use("/admin/portal/default", express.static(__dirname + "/public/index.html"));
 app.use("/admin/portal/addpasswords", express.static(__dirname + "/public/index.html"));
 app.use("/admin/portal/generatelink", express.static(__dirname + "/public/index.html"));
-app.use("/school-links/:name", express.static(__dirname + "/public/index.html"));
+app.use("/school-links/:schoolCode/:linkName", express.static(__dirname + "/public/index.html"));
 
 // app level server-routes (app implementation)
 app.use('/admin-s', admin);
 app.use('/api', api);
 app.use('/mail', mail);
 app.use('/TTI-API', TTI_API);
+app.use('/stripe', stripe);
 
 // school specific server-routes (app implementation)
 app.use('/school-links-s', schoolLinks);

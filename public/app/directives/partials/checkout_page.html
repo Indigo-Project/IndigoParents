@@ -29,12 +29,16 @@
             <input class="form-control billing-first-name" type="text" placeholder="first name on card" ng-model="form.billingFirstName" required>
             <input class="form-control billing-last-name" type="text" placeholder="last name on card" ng-model="form.billingLastName" required>
           </div>
-          <input class="form-control card-number" type="text" placeholder="credit/debit card number" ng-model="form.cardNumber" pattern=".{16}" title="must be 16 digits in the following format: '4242424242424242'" required>
+          <!-- <input class="form-control card-number" type="text" placeholder="credit/debit card number" ng-model="form.cardNumber" pattern=".{16}" title="must be 16 digits in the following format: '4242424242424242'" required>
           <div class="checkout-bottom-row">
             <input class="form-control exp-month" type="text" placeholder="08" ng-model="form.expM" pattern=".{2}" title="please enter expiration month in the following format: '02' = February" required>
             <input class="form-control exp-year" type="text" placeholder="2020" ng-model="form.expY"  pattern=".{4}" title="please enter the expiration year in the following format: '2020'"required>
             <input class="form-control sec-number" type="text" placeholder="CVC/CVV" ng-model="form.CVV"  pattern=".{3}" title="please enter 3 digit CVV security code in the following format: '123'" required>
-          </div>
+          </div> -->
+          <label>
+            <div id="card-element" class="card-input form-control" required></div>
+          </label>
+          <div id="card-errors"></div>
         </div>
         <!-- <button class="empty-cart-cta-2" ng-click="data.resetOrder()">reset order</button> -->
       </div>
@@ -43,19 +47,22 @@
       <div class="checkout-right">
         <div class="order-summary">
           <h3 class="checkout-subtitle">Order Summary</h3>
-          <h4>Items</h4>
-          <!-- <p>{{data.cart}}</p> -->
-          <p>{{data.cart.title}} x {{data.cart.quantity}}</p>
-          <h4>Subtotal</h4>
-          <p>{{data.cart.price * data.cart.quantity | currency}}</p>
+          <h4 style="text-decoration: underline">Items</h4>
+          <!-- <p>{{cart}}</p> -->
+          <p style="margin: 0"><strong>Parent Indigo Inventory</strong> x {{cart.parentOrderQuantity}} = {{cart.parentOrderQuantity * cart.parentsProductPrice | currency: "$" : 2}}</p>
+          <p style="margin: 0" ng-show="cart.studentOrderQuantity"><strong>Student Indigo Inventory</strong> x {{cart.studentOrderQuantity}} = {{cart.studentOrderQuantity * cart.studentsProductPrice | currency: "$" : 2}}</p>
+          <h4 style="margin-top: 10px; text-decoration: underline">Subtotal</h4>
+          <h4 ng-show="!cart.studentOrderQuantity">{{ (cart.parentOrderQuantity * cart.parentsProductPrice) | currency: "$" : 2}}</h4>
+          <h4 ng-show="cart.studentOrderQuantity">{{ ((cart.parentOrderQuantity * cart.parentsProductPrice) + (cart.studentOrderQuantity * cart.studentsProductPrice)) | currency: "$" : 2}}</h4>
         </div>
         <input class="form-control submit-purchase" type="submit" value="Submit Purchase" required>
         <h4 class="payment-process" ng-show="view.processingPayment === 'processing'">Processing Payment...</h4>
-        <h4 class="payment-process" ng-show="view.processingPayment === 'success'">Successful Transaction! Check your email..</h4>
+        <h4 class="payment-process" ng-show="view.processingPayment === 'delivering'">Delivering Purchase..</h4>
+        <h4 class="payment-process" ng-show="view.processingPayment === 'success'">Success! Check your email..</h4>
       </div>
     </form>
     <form ng-submit="data.resetOrder()">
-      <button class="empty-cart-cta-2" type="submit"><< back</button>
+      <button class="empty-cart-cta-2" type="submit">reset order</button>
     </form>
   </section>
 </main>

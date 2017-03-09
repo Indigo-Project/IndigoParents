@@ -6,8 +6,10 @@ app.controller('Admin_Controller', ['$scope', '$http', '$timeout', '$state', 'mL
 
   $scope.view.selectedFunction = $state.current.name
   $scope.view.selectedSchool = "default";
+  $scope.view.selectedSchoolPWLink = "default";
   $scope.view.pWQtyLoaded = false;
   $scope.view.loadFinished = false;
+  $scope.view.linksLoaded = false;
   $scope.view.showLinkCreationInterface = false;
   $scope.view.showLinkListInterface = false;
   $scope.view.addingStudentLink = false;
@@ -233,16 +235,32 @@ app.controller('Admin_Controller', ['$scope', '$http', '$timeout', '$state', 'mL
     $scope.view.addingStudentLink = !$scope.view.addingStudentLink;
   };
 
-  $scope.data.showLinkInfo = function(selectedSchool) {
-    $scope.view.pWQtyLoaded = false;
-    $scope.view.loadFinished = false;
-    $http({
-      method: 'get',
-      url: '/api/' + selectedSchool + '/showLink',
-    }).then(function(data) {
-      $scope.data.mlPwQty = data.data.length;
-      $scope.view.pWQtyLoaded = true;
+  $scope.data.loadLinkSelections = function(selectedSchool) {
+    $scope.view.linksLoaded = false;
+    mLabs.getAllTTILinksForSchool(selectedSchool)
+    .then(function(data) {
+      console.log(data.data);
+      $scope.view.selectedSchoolLinks = data.data;
+      $scope.view.linksLoaded = true;
+      $scope.$apply();
+    }).catch(function(error) {
+      console.log(error);
     })
+  }
+
+  $scope.data.showLinkInfo = function(selectedSchool, linkID) {
+    $scope.view.pWQtyLoaded = false;
+    // $scope.view.loadFinished = false;
+    if (linkID && linkID !== 'default') {
+      $http({
+        method: 'POST',
+        url: '/api/show-link',
+        data: { selectedSchool: selectedSchool, linkID: linkID}
+      }).then(function(data) {
+        $scope.data.mlPwQty = data.data.unassignedCount;
+        $scope.view.pWQtyLoaded = true;
+      })
+    }
   }
 
   $scope.data.loadPwObj = function() {
@@ -250,9 +268,11 @@ app.controller('Admin_Controller', ['$scope', '$http', '$timeout', '$state', 'mL
   }
 
   $scope.data.addPasswords = function() {
+
     $scope.view.loadFinished = false;
+
     if($scope.data.pwObj) {
-      mLabs.loadNewPasswords($scope.view.selectedSchool, $scope.data.pwObj)
+      mLabs.loadNewPasswords($scope.view.selectedSchool, $scope.view.selectedSchoolPWLink, $scope.data.pwObj)
       .then(function(data) {
         // console.log(data);
         // console.log(data.data.count);
@@ -264,6 +284,7 @@ app.controller('Admin_Controller', ['$scope', '$http', '$timeout', '$state', 'mL
     } else {
       alert('no file uploaded')
     }
+
   }
 
 }])

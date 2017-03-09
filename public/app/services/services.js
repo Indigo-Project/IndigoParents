@@ -1,14 +1,14 @@
 // TTI Service - connect to server-side TTI API
 app.factory('TTI_API', ['$http', function($http) {
   var service = {};
-  service.showLink = function(accountID, linkID) {
-    console.log(accountID, linkID);
-    $http({
-      method: "POST",
-      url: "/api/showLink",
-      data: { accountID: accountID, linkID: linkID }
-    })
-  }
+  // service.showLink = function(accountID, linkID) {
+  //   console.log(accountID, linkID);
+  //   $http({
+  //     method: "POST",
+  //     url: "/api/show-link",
+  //     data: { accountID: accountID, linkID: linkID }
+  //   })
+  // }
 
   service.createRespondent = function(school, data) {
     return new Promise(function(resolve,reject) {
@@ -51,14 +51,12 @@ app.factory('TTI_API', ['$http', function($http) {
 // Sendgrid Service - connect to server-side SG API
 app.factory('SG', ['$http', '$location', '$timeout', function($http, $location, $timeout) {
   var service = {};
-  service.successfulPurchaseEmail = function(data, schoolCode) {
+  service.successfulPurchaseEmail = function(data, schoolCode, linkInstanceData, cart) {
     return new Promise(function(resolve, reject) {
-      console.log(data);
-      console.log(schoolCode);
       $http({
         method: "POST",
         url: "/mail/send",
-        data: { data: data, schoolCode: schoolCode }
+        data: { data: data, schoolCode: schoolCode, linkInstanceData: linkInstanceData, cart: cart }
       }).then(function(maildata) {
         console.log(maildata.status === 200);
         if(maildata.status === 200) {
@@ -112,6 +110,25 @@ app.factory('Moltin_API', ['$http', function($http){
   return service;
 }])
 
+app.factory('StripeService', ['$http', function($http){
+  var service = {};
+  service.submitPurchase = function(token, form, cart, linkInstanceData) {
+    return new Promise(function(resolve, reject){
+      $http({
+        method: "POST",
+        url: "/stripe/submit-purchase",
+        data: {token: token, form: form, cart: cart, linkInstanceData: linkInstanceData}
+      }).then(function(data) {
+        console.log(data);
+        resolve(data);
+      }).catch(function(err) {
+        console.log(err);
+      })
+    })
+  }
+  return service;
+}])
+
 // Access & Manipulate mLabs DB
 app.factory("mLabs", ['$http', function($http) {
   return {
@@ -122,13 +139,28 @@ app.factory("mLabs", ['$http', function($http) {
         data: { passwords: pwObj }
       })
     },
-    loadNewPasswords: function(schoolCode, csv) {
+    getAllTTILinksForSchool: function(schoolCode) {
+      return new Promise(function(resolve, reject) {
+        $http({
+          method: "POST",
+          url: "/api/get-all-tti-links-for-school",
+          data: { schoolCode: schoolCode}
+        }).then(function(data) {
+          if (data) {
+            resolve(data);
+          } else {
+            console.log('error');
+          }
+        })
+      });
+    },
+    loadNewPasswords: function(schoolCode, linkID, csv) {
       console.log(csv);
       return new Promise(function(resolve, reject) {
         $http({
           method: "POST",
-          url: "/api/" + schoolCode + "/add-passwords",
-          data: { csv: csv , schoolCode: schoolCode}
+          url: "/api/add-passwords",
+          data: { schoolCode: schoolCode, linkID: linkID, csv: csv}
         }).then(function(data) {
           if (data) {
             resolve(data);
@@ -138,12 +170,12 @@ app.factory("mLabs", ['$http', function($http) {
         })
       })
     },
-    assignNewPassword: function(schoolCode, respondentData) {
+    assignNewPassword: function(linkInstanceData, form, cart) {
       return new Promise(function(resolve, reject) {
         $http({
           method: "POST",
-          url: "/api/" + schoolCode + "/assign-new-password",
-          data: { respondentData: respondentData }
+          url: "/api/assign-new-password",
+          data: { linkInstanceData: linkInstanceData, form: form, cart: cart }
         }).then(function(data) {
           if (data) {
             resolve(data);
@@ -187,6 +219,23 @@ app.factory("mLabs", ['$http', function($http) {
           console.log(err);
         })
       })
+    },
+    retrieveSchoolLinkData: function(schoolCode, linkName) {
+      return new Promise(function(resolve, reject) {
+        $http({
+          method: "POST",
+          url: "/admin-s/retrieve-school-link-data",
+          data: { schoolCode: schoolCode, linkName: linkName }
+        }).then(function(data) {
+          if (data) {
+            resolve(data);
+          } else {
+            console.log('error');
+          }
+        }).catch(function(err) {
+          console.log(err);
+        })
+      });
     }
   }
 }])

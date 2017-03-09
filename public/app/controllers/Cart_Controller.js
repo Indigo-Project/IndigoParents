@@ -4,8 +4,9 @@ app.controller('Cart_Controller', ['$scope', '$state', '$http', 'localStorageSer
   $scope.data = {};
 
   $scope.data.mastheadLoaded = true;
+  $scope.data.purchaseCta = 'Add To Cart';
 
-  $scope.data.purchaseCta = 'Purchase';
+  $scope.cart = {};
   // set cartKey variable to key of cart object
   // console.log(localStorageService.get('cart'));
   // console.log(Object.keys(localStorageService.get('cart')['0']));
@@ -74,57 +75,84 @@ app.controller('Cart_Controller', ['$scope', '$state', '$http', 'localStorageSer
     $scope.data.updateCartStatus();
   }
 
+  $scope.data.linkInstanceData = localStorageService.get('linkInstanceData');
+  $scope.data.studentProductExists = $scope.data.linkInstanceData.students ? true : false;
+  console.log($scope.data.linkInstanceData.parents.productMaxQty);
+  console.log($scope.data.linkInstanceData.students.productMaxQty);
+  console.log($scope.data.studentProductExists);
+  $scope.data.cartExists = localStorageService.get('shoppingCart') ? true : false;
+
   // run when user clicks 'add to cart' from products page
   $scope.data.addToCart = function(productSlug) {
 
     $scope.data.purchaseCta = "Loading..."
     localStorageService.set('checkoutStatus', 'in-progress');
-    var invQty = localStorageService.get('invQty');
-    console.log(invQty);
 
-    if(invQty !== 1) {
+    var linkInstanceData = localStorageService.get('linkInstanceData');
+    $scope.cart.parentsProductPrice = linkInstanceData.parents.productPrice;
+    linkInstanceData.students ? $scope.cart.studentsProductPrice = linkInstanceData.students.productPrice : null;
 
-      Moltin_API.getENV()
-      .then(function(env) {
-        var moltin = new Moltin({publicId: env.data.MOLTIN_CLIENT_ID});
-        // console.log(moltin);
-        moltin.Authenticate(function() {
-          Moltin_API.getIndigoInventory()
-          .then(function(data){
-            var item = moltin.Cart.Insert(data.product_id, 1, null)
-            var checkoutObj = moltin.Cart.Checkout();
-            // console.log(checkoutObj);
-            var cart = moltin.Cart.Contents();
-            var cartContents = [];
-            cartContents.push(cart.contents);
-            localStorageService.set("cart", cartContents);
-            if (localStorageService.get('cart') !== null) {
-              var cartKey = Object.keys(localStorageService.get('cart')['0'])[0]
-            } else {
-              var cartKey = null;
-            }
-            if(cartKey === null) {
-              $scope.data.cart = [];
-              var iiCartItem = null;
-            } else {
-              $scope.data.cart = localStorageService.get('cart');
-              var iiCartItem = $scope.data.cart['0'][cartKey];
-            }
-            console.log(cartKey);
-            $scope.data.calcTotalCartQty();
-            $scope.$apply();
-            localStorageService.set('invQty', 1);
-            $state.transitionTo('checkoutMain');
-          }).catch(function(error) {
-            console.log(error);
-          })
-        })
-      }).catch(function(error) {
-        console.log(error);
-      })
-    } else if (invQty === 1) {
-      $state.transitionTo('checkoutMain');
+    // Apply updates to cart (if done so through products page)
+    var currentCart = localStorageService.get('shoppingCart');
+    if (currentCart) {
+      (currentCart.parentOrderQuantity + $scope.cart.parentOrderQuantity) >= $scope.data.linkInstanceData.parents.productMaxQty ?  alert('Exceeds cart limit for parent version') : currentCart.parentOrderQuantity += $scope.cart.parentOrderQuantity;
+      currentCart.studentOrderQuantity ? (currentCart.studentOrderQuantity + $scope.cart.studentOrderQuantity) >= $scope.data.linkInstanceData.students.productMaxQty ? alert('Exceeds cart limit for student version') : currentCart.studentOrderQuantity += $scope.cart.studentOrderQuantity : null;
+      // currentCart.parentOrderQuantity += $scope.cart.parentOrderQuantity;
+
+
+
+      localStorageService.set('shoppingCart', currentCart);
+    } else {
+      localStorageService.set('shoppingCart', $scope.cart);
     }
+
+    // If LS cart object exists, go to checkout
+    localStorageService.get('shoppingCart') ? $state.transitionTo('checkoutMain') : null;
+
+
+    // if($scope.cart.parentOrderQuantity < 1) {
+
+      // Moltin_API.getENV()
+      // .then(function(env) {
+      //   var moltin = new Moltin({publicId: env.data.MOLTIN_CLIENT_ID});
+      //   // console.log(moltin);
+      //   moltin.Authenticate(function() {
+      //     Moltin_API.getIndigoInventory()
+      //     .then(function(data){
+      //       var item = moltin.Cart.Insert(data.product_id, 1, null)
+      //       var checkoutObj = moltin.Cart.Checkout();
+      //       // console.log(checkoutObj);
+      //       var cart = moltin.Cart.Contents();
+      //       var cartContents = [];
+      //       cartContents.push(cart.contents);
+      //       localStorageService.set("cart", cartContents);
+      //       if (localStorageService.get('cart') !== null) {
+      //         var cartKey = Object.keys(localStorageService.get('cart')['0'])[0]
+      //       } else {
+      //         var cartKey = null;
+      //       }
+      //       if(cartKey === null) {
+      //         $scope.data.cart = [];
+      //         var iiCartItem = null;
+      //       } else {
+      //         $scope.data.cart = localStorageService.get('cart');
+      //         var iiCartItem = $scope.data.cart['0'][cartKey];
+      //       }
+      //       console.log(cartKey);
+      //       $scope.data.calcTotalCartQty();
+      //       $scope.$apply();
+      //       localStorageService.set('invQty', 1);
+      //       $state.transitionTo('checkoutMain');
+      //     }).catch(function(error) {
+      //       console.log(error);
+      //     })
+      //   })
+      // }).catch(function(error) {
+      //   console.log(error);
+      // })
+    // } else if ($scope.cart.parentOrderQuantity >= 1) {
+    //    $state.transitionTo('checkoutMain');
+    // }
   }
 
   // run when user clicks 'empty cart' in cart

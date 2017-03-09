@@ -41,7 +41,7 @@ header.masthead {
   header.masthead .masthead-nav {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: space-around;
     width: 20vw; }
   header.masthead .masthead-end-filler {
     width: 10vw; }
@@ -144,21 +144,29 @@ div.one-product {
       div.one-product div.product-right div.product-details p {
         font-size: 14.5px; }
     div.one-product div.product-right div.cart-cta {
-      width: 20vw;
-      margin-left: 26vw; }
+      width: fit-content;
+      margin-left: auto; }
       div.one-product div.product-right div.cart-cta form {
         display: flex;
-        justify-content: flex-end;
         width: 100%; }
         div.one-product div.product-right div.cart-cta form label {
-          font-size: 18px;
-          margin: 0.5vh 0vw 0vh 1.5vw; }
+          font-size: 16px;
+          margin-top: auto; }
         div.one-product div.product-right div.cart-cta form .quantity {
-          width: 60px; }
+          width: 60px;
+          margin-right: 15px; }
         div.one-product div.product-right div.cart-cta form .add-to-cart {
           width: 140px;
           color: #ffffff;
           background-color: #7BBF4A; }
+
+div.parent-quantity, div.student-quantity {
+  display: flex;
+  justify-content: space-between;
+  margin-right: 10px; }
+  div.parent-quantity label, div.student-quantity label {
+    width: fit-content;
+    margin-right: 8px; }
 
 section.quotes {
   display: flex;
@@ -272,7 +280,9 @@ button.empty-cart-cta-2 {
   width: 80px;
   border: none;
   color: #9e9e9e;
-  background-color: white; }
+  background-color: white;
+  padding: 0;
+  margin: 0; }
   button.empty-cart-cta-2:hover {
     color: #5790ff; }
 
@@ -305,7 +315,7 @@ main.checkout-page {
   margin-bottom: 10px; }
 
 section.checkout {
-  width: 45vw;
+  width: 55vw;
   height: 50vh;
   margin-top: 40px; }
 

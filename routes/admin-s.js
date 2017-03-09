@@ -55,4 +55,21 @@ router.post('/get-school-link-list', function(req, res, next) {
 
 })
 
+router.post('/retrieve-school-link-data', function(req, res, next) {
+  console.log('schoolCode', req.body.schoolCode);
+  mongo.mongoDBConnect(mongo.indigoParentsURI)
+  .then(function(db) {
+    mongo.retrieveSchoolLinkData(db.db, req.body.schoolCode, req.body.linkName)
+    .then(function(linkData) {
+      console.log('linkData', linkData);
+      res.send(linkData);
+    }).catch(function(err) {
+      console.log(err);
+    })
+  }).catch(function(err) {
+    console.log(err);
+  })
+
+})
+
 module.exports = router;

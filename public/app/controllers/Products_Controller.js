@@ -18,15 +18,25 @@ app.controller('Products_Controller', ['$scope', '$state', '$timeout', 'localSto
   // }
 
   $scope.data.getIndigoInventory = function() {
+
+    $scope.data.linkInstanceData = localStorageService.get('linkInstanceData');
+
+    // Moltin (Title, Image, & Description)
     Moltin_API.getIndigoInventory()
     .then(function(data) {
+      console.log(data);
+      console.log($scope.data.linkInstanceData);
       $scope.data.indigoInventory = data;
-      $scope.data.products.push(data);
       $scope.data.productsLoaded = true;
+
+      // Using LS Params
+      $scope.data.studentProductExists = $scope.data.linkInstanceData.students ? true : false;
+
       $scope.$apply();
     }).catch(function(error) {
       console.log(error);
     })
+
   }
 
 }])

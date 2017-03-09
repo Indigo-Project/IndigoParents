@@ -61,25 +61,112 @@ var database = {
   },
 
   // Add fresh passwords to a Particular Link
-  addPassword: function(db, schoolCode, addToDBObj) {
+  addPassword: function(db, schoolCode, linkID, addToDBObj) {
 
     // Access the linkPasswords collection
-    var collection = db.collection(schoolCode + "Passwords");
+    var collection = db.collection(schoolCode + "Passwords_" + linkID);
     collection.insert(addToDBObj)
   },
 
-  getAllPasswordsByLink: function(db, schoolCode) {
-
-    // Access the linkPasswords collection
-    var cursor = db.collection(schoolCode + "Passwords").find();
-    return cursor.toArray();
-  },
-
-  assignPassword: function(db, schoolCode, data) {
+  getAllPasswordsByLink: function(db, schoolCode, linkID) {
 
     return new Promise(function(resolve, reject) {
-      console.log("mlabsData:", data);
-      var collection = db.collection(schoolCode + "Passwords");
+      var linkCollection = schoolCode + "Passwords_" + linkID;
+      var workingCollection;
+      db.collection(linkCollection, {strict: true}, function(err, collection) {
+        if (err) {
+          if (err.message === 'Collection ' + linkCollection + ' does not exist. Currently in strict mode.') {
+            // console.log(linkCollection + ' collection does not exist. Create ' + linkCollection + ' collection');
+            db.createCollection(linkCollection, function(err, collection) {
+              workingCollection = collection;
+              // console.log('recently created collection', workingCollection);
+              if (workingCollection) {
+                workingCollection.find().toArray(function(err, docs) {
+                  if (err) {
+                    console.log(err);
+                  } else {
+                    resolve(docs);
+                  }
+                })
+              }
+            })
+          } else {
+            console.log(err);
+            // console.log('unidentified error - no collection created. check logs');
+            reject();
+          }
+        } else {
+          collection.find().toArray(function(err, docs) {
+            if (err) {
+              console.log(err);
+            } else {
+              resolve(docs);
+            }
+          })
+        }
+      })
+
+    });
+
+    // Access the linkPasswords collection
+    // var cursor = db.collection(schoolCode + linkID + "Passwords").find();
+    // return cursor.toArray();
+
+  },
+
+  getAllTTILinksForSchool: function(db, schoolCode) {
+    return new Promise(function(resolve, reject) {
+
+      var linkCollection = schoolCode + 'Links';
+      var linkArr = [];
+
+      db.collection(linkCollection, function(err, collection) {
+        if (err) {
+          console.log(err);
+        } else {
+
+          collection.find().toArray(function(err, docs) {
+
+            for (var i = 0; i < docs.length; i++) {
+
+              var parentLink = docs[i].parents.TTIlinkID;
+              var studentLink = docs[i].students ? docs[i].students.TTIlinkID : null;
+
+              var pLinkExists = false;
+              var sLinkExists = false;
+
+              for (var j = 0; j < linkArr.length; j++) {
+                if (parentLink === linkArr[j]) {
+                  pLinkExists = true;
+                }
+                if (studentLink) {
+                  if (studentLink === linkArr[j]) {
+                    sLinkExists = true;
+                  }
+                }
+              }
+
+              !pLinkExists ? linkArr.push(parentLink) : null;
+              !sLinkExists && studentLink ? linkArr.push(studentLink) : null;
+
+            }
+
+            resolve(linkArr);
+
+          })
+
+        }
+      })
+
+    });
+
+  },
+
+  assignPassword: function(db, schoolCode, linkID, data) {
+
+    return new Promise(function(resolve, reject) {
+      // console.log("mlabsData:", data);
+      var collection = db.collection(schoolCode + "Passwords_" + linkID);
       collection.updateOne({password: data.pw}, {$set: {assigned: true, first_name: data.first_name, last_name: data.last_name, email: data.email }}, function(err, result) {
         assert.equal(null, err);
         resolve({result: result, password: data.pw});
@@ -181,6 +268,31 @@ var database = {
             } else {
               console.log('docs', docs);
               resolve({status: 'populated', docs: docs})
+            }
+          });
+        }
+      })
+
+    });
+  },
+
+  retrieveSchoolLinkData: function(db, schoolCode, linkName) {
+    return new Promise(function(resolve, reject) {
+      var collection = schoolCode + 'Links';
+
+      db.collection(collection, function(err, collection) {
+        if (err) {
+          console.log(err);
+        } else {
+          collection.findOne({name: linkName}, function(err, link) {
+            if (err) {
+              console.log(err);
+            } else if (!link) {
+              console.log('no link of name ' + linkName + ' found');
+              resolve({status: 'link not found'})
+            } else {
+              console.log('link', link);
+              resolve({status: 'link found', link: link})
             }
           });
         }

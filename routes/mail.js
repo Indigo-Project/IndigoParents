@@ -32,10 +32,69 @@ var router = express.Router();
 // })
 
 router.post('/send', function(req, res, next) {
-  console.log(req.body.schoolCode);
+
+  var linkInstanceData = req.body.linkInstanceData;
+  var cart = req.body.cart;
+
   var schoolName = school_link_conv[req.body.schoolCode].name;
-  console.log(schoolName);
-  var linkId = TTI_API.linkLocations[req.body.schoolCode].mainLink.id
+  var parentLinkID = linkInstanceData.parents.TTILinkID;
+  var studentLinkID = linkInstanceData.students ? linkInstanceData.students.TTILinkID : null;
+
+  var parentOrderQuantity = cart.parentOrderQuantity;
+  var studentOrderQuantity = cart.studentOrderQuantity || 0;
+
+  var totalPasswordCount = parentOrderQuantity + studentOrderQuantity;
+
+  console.log(totalPasswordCount);
+
+  console.log(req.body.data);
+  var passwords = req.body.data.passwords;
+  var parentPasswords = passwords.parents;
+  var studentPasswords = passwords.students;
+
+  var emailParentPasswords = '<ul>';
+  for (var i = 0; i < parentPasswords.length; i++) {
+    console.log('parentPasswords ' + i, parentPasswords[i]);
+    emailParentPasswords += '<li>' + parentPasswords[i] + '</li>';
+
+    // if (i === parentPasswords.length - 1) {
+    //   emailParentPasswords += parentPasswords[i] + ", ";
+    // } else {
+    //   emailParentPasswords += parentPasswords[i];
+    // }
+
+  }
+  emailParentPasswords += '</ul>';
+
+  var emailStudentSection = '';
+  var emailStudentPasswords = '<ul>';
+
+  if (studentOrderQuantity) {
+
+    for (var i = 0; i < studentPasswords.length; i++) {
+      console.log('studentPasswords ' + i, studentPasswords[i]);
+      emailStudentPasswords += '<li>' + studentPasswords[i] + '</li>';
+
+      // if (i === studentPasswords.length - 1) {
+      //   emailStudentPasswords += studentPasswords[i] + ", ";
+      // } else {
+      //   emailStudentPasswords += studentPasswords[i];
+      // }
+
+    }
+    emailStudentPasswords += '</ul>';
+
+    emailStudentSection = '<strong>Student Assessments<\/strong><ol><li>Click <a href=\"https://www.ttisurvey.com/' + studentLinkID + '\">Here<\/a> to start the Student Indigo Inventory. It will take approximately<br> 40 minutes to complete and it must be finished in one sitting.<\/li><li>The webpage will prompt you for a password. Please enter one of the following passwords: <br>' + emailStudentPasswords + '<\/li><\/ol>';
+  }
+
+  console.log('emailStudentPasswords', emailStudentPasswords);
+  console.log('emailParentPasswords', emailParentPasswords);
+
+  var subject = totalPasswordCount > 1 ? req.body.data.firstName + ", Access Your Indigo Assessments" : req.body.data.firstName + ", Access Your Indigo Assessment"
+  var emailContent = 'Hello ' + schoolName + ' Parents!,<br><br>Thank you for purchasing the Indigo Inventory.  Indigo Parent Nights create an intentional time where parents and students can learn more about their differences, and how parents can help their kids succeed based on who they are.<br><br><strong>Instructions<\/strong><br>To access the Indigo Inventory, click on the link corresponding to the versions of the assessment you purchased. We’ve included one password for each Inventory purchased, which you will use to access the Inventory once the link is opened.<br><br><strong>Parent Assessments<\/strong><ol><li>Click <a href=\"https://www.ttisurvey.com/' + parentLinkID + '\">Here<\/a> to start the Parent Indigo Inventory. It will take approximately 20 minutes to complete and it must be finished in one sitting.<\/li><li>The webpage will prompt you for a password. Please enter one of the following passwords: <br>' + emailParentPasswords + '<\/li><\/ol>' + emailStudentSection + '<br><br>We hope you enjoy learning more about yourself and your child\'s strengths!<br>- The Indigo Team<br><br><em>“Enlightening. Worth the time and money to help you understand yourself and your child.”<br>- High School Parent (Cincinnati, Ohio)</em><br><br><img style=\"width: 200px;\" src=\"http://p3insights.com/wp-content/uploads/2016/07/download-300x166.png\"> '
+  console.log(subject);
+  console.log(emailContent);
+
   var request = sg.emptyRequest({
     method: 'POST',
     path: '/v3/mail/send',
@@ -47,16 +106,17 @@ router.post('/send', function(req, res, next) {
               email: req.body.data.email,
             },
           ],
-          subject: req.body.data.first_name + ", Access Your Indigo Me Assessment",
+          subject: subject,
         },
       ],
       from: {
-        email: 'IndigoParents@indigoproject.org',
+        email: 'info@indigoproject.org',
       },
       content: [
         {
           type: 'text/html',
-          value: 'Hello ' + schoolName + ' Parents!,<br><br>Thank you for purchasing the Indigo Inventory.  Indigo Parent Nights create an intentional time where parents and students can learn more about their differences, and how parents can help their kids succeed based on who they are.<br><br><strong>Instructions<\/strong><br><ol><li>Click <a href=\"https://www.ttisurvey.com/' + linkId + '\">Here<\/a> to start the Indigo Inventory. It will take approximately<br> 20 minutes to complete and it must be finished in one sitting.<\/li><li>The webpage will prompt you for a password. Please enter this password: ' + req.body.data.password + '<\/li><\/ol>We hope you enjoy learning more about yourself and your child\'s strengths!<br>- The Indigo Team<br><br><em>“Enlightening. Worth the time and money to help you understand yourself and your child.”<br>- High School Parent (Cincinnati, Ohio)</em><br><br><img style=\"width: 200px;\" src=\"http://p3insights.com/wp-content/uploads/2016/07/download-300x166.png\"> '
+          value: emailContent
+          // value: 'Hello ' + schoolName + ' Parents!,<br><br>Thank you for purchasing the Indigo Inventory.  Indigo Parent Nights create an intentional time where parents and students can learn more about their differences, and how parents can help their kids succeed based on who they are.<br><br><strong>Instructions<\/strong><br><ol><li>Click <a href=\"https://www.ttisurvey.com/' + linkId + '\">Here<\/a> to start the Indigo Inventory. It will take approximately<br> 20 minutes to complete and it must be finished in one sitting.<\/li><li>The webpage will prompt you for a password. Please enter this password: ' + req.body.data.password + '<\/li><\/ol>We hope you enjoy learning more about yourself and your child\'s strengths!<br>- The Indigo Team<br><br><em>“Enlightening. Worth the time and money to help you understand yourself and your child.”<br>- High School Parent (Cincinnati, Ohio)</em><br><br><img style=\"width: 200px;\" src=\"http://p3insights.com/wp-content/uploads/2016/07/download-300x166.png\"> '
           // req.body.data.first_name + ', Here is your assessment. <a href=\"https://www.ttisurvey.com/' + linkId + '\">Click Here<\/a> and enter the following password: ' + req.body.data.password,
         },
       ],
@@ -75,6 +135,7 @@ router.post('/send', function(req, res, next) {
   //   err && console.log(err)
   // });
   res.end();
+
 })
 
 module.exports = router;
