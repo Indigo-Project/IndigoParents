@@ -5,15 +5,14 @@ app.controller('Checkout_Controller', ['$scope', '$state', '$timeout', '$window'
   $scope.form = {};
   $scope.view.paymentStatus = "";
 
-  var stripeSecret, stripe, elements, card
-  var stripeSecret;
+  var stripeSecret, env, stripe, elements, card
   Moltin_API.getENV()
   .then(function(data) {
-    var env = data.data;
+    env = data.data;
     stripeSecret = env === 'DEVELOPMENT' ? 'pk_test_bBpUE70t4N2m4NUTxatiEtuH' : 'pk_live_Jc8MsI8vrWaC0OTAeLPmXLWU' ;
-    var stripe = Stripe(stripeSecret);
-    var elements = stripe.elements();
-    var card = elements.create('card');
+    stripe = Stripe(stripeSecret);
+    elements = stripe.elements();
+    card = elements.create('card');
     card.mount('#card-element');
 
     $scope.data.cardError = '';
@@ -188,12 +187,13 @@ app.controller('Checkout_Controller', ['$scope', '$state', '$timeout', '$window'
                 SG.successfulPurchaseEmail(form, schoolCode, linkInstanceData, cart)
                 .then(function(data) {
                   $scope.view.processingPayment = 'success';
+                  $scope.$apply()
 
                   console.log(data);
-                  // localStorageService.set('checkoutStatus', 'post-checkout-on');
-                  // $state.transitionTo('checkoutSuccess');
-                  // localStorageService.remove('shoppingCart');
-                  // $scope.data.redirectHome();
+                  localStorageService.set('checkoutStatus', 'post-checkout-on');
+                  $state.transitionTo('checkoutSuccess');
+                  localStorageService.remove('shoppingCart');
+                  $scope.data.redirectHome();
 
                 }).catch(function(error){
                   console.log(error);

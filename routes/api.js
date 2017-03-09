@@ -162,7 +162,9 @@ router.post('/get-all-tti-links-for-school', function(req, res, next) {
 router.post('/assign-new-password', function(req, res, next) {
 
   var schoolCode = req.body.linkInstanceData.schoolCode;
-  var linkIDs = { parents: req.body.linkInstanceData.parents.TTIlinkID, students: req.body.linkInstanceData.students.TTIlinkID};
+  var linkIDs = {}
+  linkIDs.parents = req.body.linkInstanceData.parents.TTIlinkID
+  req.body.linkInstanceData.students ? linkIDs.students = req.body.linkInstanceData.students.TTIlinkID : null;
   var form = req.body.form;
   var cart = req.body.cart;
 

@@ -77,9 +77,6 @@ app.controller('Cart_Controller', ['$scope', '$state', '$http', 'localStorageSer
 
   $scope.data.linkInstanceData = localStorageService.get('linkInstanceData');
   $scope.data.studentProductExists = $scope.data.linkInstanceData.students ? true : false;
-  console.log($scope.data.linkInstanceData.parents.productMaxQty);
-  console.log($scope.data.linkInstanceData.students.productMaxQty);
-  console.log($scope.data.studentProductExists);
   $scope.data.cartExists = localStorageService.get('shoppingCart') ? true : false;
 
   // run when user clicks 'add to cart' from products page
