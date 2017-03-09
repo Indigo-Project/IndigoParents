@@ -184,11 +184,12 @@
                 <p>Max Qty: {{link.parents.productMaxQty}}</p>
                 <p>Price: {{link.parents.productPrice}}</p>
               </div>
-              <div ng-show="data.currentLinkList.students" class="link-students">
-                <p>Max Qty: {{link.parents.productMaxQty}}</p>
-                <p>Price: {{link.parents.productPrice}}</p>
+              <div ng-show="link.students" class="link-students">
+                <h5>Students</h5>
+                <p>Max Qty: {{link.students.productMaxQty}}</p>
+                <p>Price: {{link.students.productPrice}}</p>
               </div>
-              <div ng-show="!data.currentLinkList.students" class="link-students">
+              <div ng-show="!link.students" class="link-students">
                 <h5>No Students</h5>
               </div>
             </td>

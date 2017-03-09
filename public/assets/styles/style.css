@@ -587,7 +587,7 @@ td.link-spec {
   td.link-spec div {
     display: flex;
     flex-direction: column;
-    margin: 0; }
+    margin: 0 20px 0 0; }
     td.link-spec div p {
       margin: 0; }
 

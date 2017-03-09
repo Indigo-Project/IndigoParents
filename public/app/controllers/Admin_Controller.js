@@ -199,6 +199,7 @@ app.controller('Admin_Controller', ['$scope', '$http', '$timeout', '$state', 'mL
           $scope.view.linkListStatus = 'empty';
         } else if (data.data.status === 'populated'){
           $scope.data.currentLinkList = data.data.docs;
+          console.log($scope.data.currentLinkList);
           $scope.view.linkListStatus = 'populated';
         }
         $scope.$apply();
