@@ -84,7 +84,7 @@ router.post('/send', function(req, res, next) {
     }
     emailStudentPasswords += '</ul>';
 
-    emailStudentSection = '<strong>Student Assessments<\/strong><ol><li>Click <a href=\"https://www.ttisurvey.com/' + studentLinkID + '\">Here<\/a> to start the Student Indigo Inventory. It will take approximately<br> 40 minutes to complete and it must be finished in one sitting.<\/li><li>The webpage will prompt you for a password. Please enter one of the following passwords: <br>' + emailStudentPasswords + '<\/li><\/ol>';
+    emailStudentSection = '<strong>Student Assessments<\/strong><ol><li>Click <a href=\"https://www.ttisurvey.com/' + studentLinkID + '\">Here<\/a> to start the Student Indigo Inventory. It will take approximately 40 minutes to complete and it must be finished in one sitting.<\/li><li>The webpage will prompt you for a password. Please enter one of the following passwords: <br>' + emailStudentPasswords + '<\/li><\/ol>';
   }
 
   console.log('emailStudentPasswords', emailStudentPasswords);
