@@ -9,7 +9,11 @@ app.controller('Checkout_Controller', ['$scope', '$state', '$timeout', '$window'
   Moltin_API.getENV()
   .then(function(data) {
     env = data.data;
-    stripeSecret = env === 'DEVELOPMENT' ? 'pk_test_bBpUE70t4N2m4NUTxatiEtuH' : 'pk_live_Jc8MsI8vrWaC0OTAeLPmXLWU' ;
+    if (env === 'DEVELOPMENT') {
+      stripeSecret = 'pk_test_bBpUE70t4N2m4NUTxatiEtuH';
+    } else if (env === 'PRODUCTION') {
+      stripeSecret = 'pk_live_Jc8MsI8vrWaC0OTAeLPmXLWU';
+    }
     stripe = Stripe(stripeSecret);
     elements = stripe.elements();
     card = elements.create('card');
