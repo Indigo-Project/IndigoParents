@@ -10,7 +10,6 @@ if (env === 'DEVELOPMENT') {
 } else {
   stripeSecret = process.env.STRIPE_LIVE_SECRET;
 }
-console.log(stripeSecret);
 var stripe = require('stripe')(stripeSecret);
 var router = express.Router();
 
@@ -24,13 +23,12 @@ router.post('/submit-purchase', function(req, res ,next) {
     var parentAmount = Number(cart.parentOrderQuantity) * Number(cart.parentsProductPrice);
     var studentAmount = cart.studentOrderQuantity ? Number(cart.studentOrderQuantity) * Number(cart.studentsProductPrice) : 0;
 
-    console.log(parentAmount, studentAmount);
-
     return Number(parentAmount + studentAmount) * 100;
 
   }
 
   var amount = calcAmount(cart);
+  console.log(stripeSecret);
   console.log(amount);
   console.log(token);
 

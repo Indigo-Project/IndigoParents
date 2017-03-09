@@ -14,6 +14,7 @@ app.controller('Checkout_Controller', ['$scope', '$state', '$timeout', '$window'
     } else if (env === 'PRODUCTION') {
       stripeSecret = 'pk_live_Jc8MsI8vrWaC0OTAeLPmXLWU';
     }
+    console.log(stripeSecret);
     stripe = Stripe(stripeSecret);
     elements = stripe.elements();
     card = elements.create('card');
