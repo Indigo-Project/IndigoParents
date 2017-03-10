@@ -32,11 +32,11 @@
           <form name="addToCart" ng-submit="data.addToCart(data.indigoInventory.product_slug)" class="form-group">
             <div class="parent-quantity">
               <label for="quantity">Parent Qty:</label>
-              <input type="number" name="quantity" class="form-control quantity" ng-model="cart.parentOrderQuantity" ng-init="cart.parentOrderQuantity = 0" min="1" max="{{data.linkInstanceData.parents.productMaxQty}}" required>
+              <input type="number" name="quantity" class="form-control quantity" ng-model="cart.parentOrderQuantity" ng-init="cart.parentOrderQuantity = 0" min="0" max="{{data.linkInstanceData.parents.productMaxQty}}" required>
             </div>
             <div class="student-quantity" ng-show="data.studentProductExists">
               <label for="quantity">Student Qty:</label>
-              <input type="number" name="quantity" class="form-control quantity" ng-model="cart.studentOrderQuantity" ng-init="cart.studentOrderQuantity = 0" max="{{data.linkInstanceData.students.productMaxQty}}">
+              <input type="number" name="quantity" class="form-control quantity" ng-model="cart.studentOrderQuantity" ng-init="cart.studentOrderQuantity = 0" min="0" max="{{data.linkInstanceData.students.productMaxQty}}">
             </div>
             <input type="submit" class="form-control add-to-cart" value="{{data.purchaseCta}}">
           </form>

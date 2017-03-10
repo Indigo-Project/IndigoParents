@@ -49,7 +49,12 @@ app.controller('Checkout_Controller', ['$scope', '$state', '$timeout', '$window'
 
   $scope.view.leaveSite = function() {
     localStorageService.set('checkoutStatus', 'post-checkout-off')
-    $window.location.href = "http://www.indigoproject.org/parent-night";
+    var location = localStorageService.get('linkInstanceData').schoolCode;
+    if (location === 'arete') {
+      $window.location.href = "http://www.indigoproject.org/arete"
+    } else {
+      $window.location.href = "http://www.indigoproject.org/parent-night";
+    }
   }
 
   $scope.data.lscart = localStorageService.get('cart') || [];

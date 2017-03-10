@@ -96,8 +96,6 @@ app.controller('Cart_Controller', ['$scope', '$state', '$http', 'localStorageSer
       currentCart.studentOrderQuantity ? (currentCart.studentOrderQuantity + $scope.cart.studentOrderQuantity) >= $scope.data.linkInstanceData.students.productMaxQty ? alert('Exceeds cart limit for student version') : currentCart.studentOrderQuantity += $scope.cart.studentOrderQuantity : null;
       // currentCart.parentOrderQuantity += $scope.cart.parentOrderQuantity;
 
-
-
       localStorageService.set('shoppingCart', currentCart);
     } else {
       localStorageService.set('shoppingCart', $scope.cart);
@@ -106,50 +104,6 @@ app.controller('Cart_Controller', ['$scope', '$state', '$http', 'localStorageSer
     // If LS cart object exists, go to checkout
     localStorageService.get('shoppingCart') ? $state.transitionTo('checkoutMain') : null;
 
-
-    // if($scope.cart.parentOrderQuantity < 1) {
-
-      // Moltin_API.getENV()
-      // .then(function(env) {
-      //   var moltin = new Moltin({publicId: env.data.MOLTIN_CLIENT_ID});
-      //   // console.log(moltin);
-      //   moltin.Authenticate(function() {
-      //     Moltin_API.getIndigoInventory()
-      //     .then(function(data){
-      //       var item = moltin.Cart.Insert(data.product_id, 1, null)
-      //       var checkoutObj = moltin.Cart.Checkout();
-      //       // console.log(checkoutObj);
-      //       var cart = moltin.Cart.Contents();
-      //       var cartContents = [];
-      //       cartContents.push(cart.contents);
-      //       localStorageService.set("cart", cartContents);
-      //       if (localStorageService.get('cart') !== null) {
-      //         var cartKey = Object.keys(localStorageService.get('cart')['0'])[0]
-      //       } else {
-      //         var cartKey = null;
-      //       }
-      //       if(cartKey === null) {
-      //         $scope.data.cart = [];
-      //         var iiCartItem = null;
-      //       } else {
-      //         $scope.data.cart = localStorageService.get('cart');
-      //         var iiCartItem = $scope.data.cart['0'][cartKey];
-      //       }
-      //       console.log(cartKey);
-      //       $scope.data.calcTotalCartQty();
-      //       $scope.$apply();
-      //       localStorageService.set('invQty', 1);
-      //       $state.transitionTo('checkoutMain');
-      //     }).catch(function(error) {
-      //       console.log(error);
-      //     })
-      //   })
-      // }).catch(function(error) {
-      //   console.log(error);
-      // })
-    // } else if ($scope.cart.parentOrderQuantity >= 1) {
-    //    $state.transitionTo('checkoutMain');
-    // }
   }
 
   // run when user clicks 'empty cart' in cart
